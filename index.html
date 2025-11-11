@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <header class="hero">
     <h1>MathsLab by Sonam — <span class="sub">TrignoTool</span></h1>
     <p class="subtitle">Height • Distance • Angle — find any one by entering the other two</p>
@@ -16,6 +17,7 @@
     <button id="startBtn" class="cta">Start TrignoTool</button>
   </header>
 
+  <!-- ✅ FIXED GALLERY IMAGE PATHS -->
   <section class="gallery" aria-label="Activity photos">
     <img src="gallery_1.jpg" alt="Students activity 1" loading="lazy">
     <img src="gallery_2.jpg" alt="Students activity 2" loading="lazy">
@@ -36,6 +38,7 @@
 
     <section class="card">
       <h2>Enter the known values</h2>
+
       <div class="form">
         <div class="row">
           <label for="height">Height</label>
@@ -47,6 +50,7 @@
             <option value="dm">dm</option>
           </select>
         </div>
+
         <div class="row">
           <label for="distance">Distance</label>
           <input id="distance" type="number" step="any" placeholder="e.g., 20">
@@ -57,11 +61,12 @@
             <option value="dm">dm</option>
           </select>
         </div>
+
         <div class="row">
           <label for="angle">Angle θ</label>
           <input id="angle" type="number" step="0.1" placeholder="e.g., 30"> <span>degrees</span>
         </div>
-        <div class="hint">Tip: Use your <b>Clinometer</b> to measure θ. Enter any two values and choose which one to find. Units supported: km, m, cm, dm.</div>
+
         <div class="buttons">
           <button id="calc">Calculate</button>
           <button id="clear" class="ghost">Clear</button>
@@ -85,5 +90,6 @@
   </footer>
 
   <script src="app.js"></script>
+
 </body>
 </html>
