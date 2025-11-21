@@ -1,95 +1,146 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>MathsLab by Sonam — TrignoTool</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#6a00f4"/>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MathsLab by Sonam — TrignoTool</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#6a00f4" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>MathsLab by Sonam — <span class="sub">TrignoTool</span></h1>
+      <p class="subtitle">
+        Height • Distance • Angle — find any one by entering the other two
+      </p>
+      <p class="byline">
+        Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose,
+        Ludhiana
+      </p>
+      <button id="startBtn" class="cta">Start TrignoTool</button>
+    </header>
 
-  <header class="hero">
-    <h1>MathsLab by Sonam — <span class="sub">TrignoTool</span></h1>
-    <p class="subtitle">Height • Distance • Angle — find any one by entering the other two</p>
-    <p class="byline">Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose, Ludhiana</p>
-    <button id="startBtn" class="cta">Start TrignoTool</button>
-  </header>
-
-  <!-- ✅ FIXED GALLERY IMAGE PATHS -->
-  <section class="gallery" aria-label="Activity photos">
-    <img src="gallery_1.jpg" alt="Students activity 1" loading="lazy">
-    <img src="gallery_2.jpg" alt="Students activity 2" loading="lazy">
-    <img src="gallery_3.jpg" alt="Students activity 3" loading="lazy">
-    <img src="gallery_4.jpg" alt="Students activity 4" loading="lazy">
-    <img src="gallery_5.jpg" alt="Students activity 5" loading="lazy">
-  </section>
-
-  <main id="tool" class="hidden">
-    <section class="card">
-      <h2>Choose what to find</h2>
-      <div class="solve-for">
-        <label><input type="radio" name="solve" value="height" checked> Height</label>
-        <label><input type="radio" name="solve" value="distance"> Distance</label>
-        <label><input type="radio" name="solve" value="angle"> Angle θ</label>
-      </div>
+    <!-- ✅ FIXED GALLERY IMAGE PATHS -->
+    <section class="gallery" aria-label="Activity photos">
+      <img
+        src="images/gallery_1.jpg"
+        alt="Students activity 1"
+        loading="lazy"
+      />
+      <img
+        src="images/gallery_2.jpg"
+        alt="Students activity 2"
+        loading="lazy"
+      />
+      <img
+        src="images/gallery_3.jpg"
+        alt="Students activity 3"
+        loading="lazy"
+      />
+      <img
+        src="images/gallery_4.jpg"
+        alt="Students activity 4"
+        loading="lazy"
+      />
+      <img
+        src="images/gallery_5.jpg"
+        alt="Students activity 5"
+        loading="lazy"
+      />
     </section>
 
-    <section class="card">
-      <h2>Enter the known values</h2>
-
-      <div class="form">
-        <div class="row">
-          <label for="height">Height</label>
-          <input id="height" type="number" step="any" placeholder="e.g., 12.5">
-          <select id="heightUnit" class="unit">
-            <option value="m">m</option>
-            <option value="km">km</option>
-            <option value="cm">cm</option>
-            <option value="dm">dm</option>
-          </select>
+    <main id="tool" class="hidden">
+      <section class="card">
+        <h2>Choose what to find</h2>
+        <div class="solve-for">
+          <label
+            ><input type="radio" name="solve" value="height" checked />
+            Height</label
+          >
+          <label
+            ><input type="radio" name="solve" value="distance" />
+            Distance</label
+          >
+          <label
+            ><input type="radio" name="solve" value="angle" /> Angle θ</label
+          >
         </div>
+      </section>
 
-        <div class="row">
-          <label for="distance">Distance</label>
-          <input id="distance" type="number" step="any" placeholder="e.g., 20">
-          <select id="distanceUnit" class="unit">
-            <option value="m">m</option>
-            <option value="km">km</option>
-            <option value="cm">cm</option>
-            <option value="dm">dm</option>
-          </select>
+      <section class="card">
+        <h2>Enter the known values</h2>
+
+        <div class="form">
+          <div class="row">
+            <label for="height">Height</label>
+            <input
+              id="height"
+              type="number"
+              step="any"
+              placeholder="e.g., 12.5"
+            />
+            <select id="heightUnit" class="unit">
+              <option value="m">m</option>
+              <option value="km">km</option>
+              <option value="cm">cm</option>
+              <option value="dm">dm</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label for="distance">Distance</label>
+            <input
+              id="distance"
+              type="number"
+              step="any"
+              placeholder="e.g., 20"
+            />
+            <select id="distanceUnit" class="unit">
+              <option value="m">m</option>
+              <option value="km">km</option>
+              <option value="cm">cm</option>
+              <option value="dm">dm</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label for="angle">Angle θ</label>
+            <input id="angle" type="number" step="0.1" placeholder="e.g., 30" />
+            <span>degrees</span>
+          </div>
+
+          <div class="buttons">
+            <button id="calc">Calculate</button>
+            <button id="clear" class="ghost">Clear</button>
+          </div>
         </div>
+      </section>
 
-        <div class="row">
-          <label for="angle">Angle θ</label>
-          <input id="angle" type="number" step="0.1" placeholder="e.g., 30"> <span>degrees</span>
-        </div>
+      <section class="card" id="result-card" style="display: none">
+        <h2>Result</h2>
+        <div id="result"></div>
+        <div id="steps" class="steps"></div>
+      </section>
 
-        <div class="buttons">
-          <button id="calc">Calculate</button>
-          <button id="clear" class="ghost">Clear</button>
-        </div>
-      </div>
-    </section>
+      <section class="about card">
+        <p>
+          <b>Developed by:</b> Sonam Sharma • Maths Mistress • GSSS
+          Multipurpose, Ludhiana
+        </p>
+      </section>
+    </main>
 
-    <section class="card" id="result-card" style="display:none;">
-      <h2>Result</h2>
-      <div id="result"></div>
-      <div id="steps" class="steps"></div>
-    </section>
+    <footer>
+      <span>Works offline • Install via “Add to Home Screen”</span>
+    </footer>
 
-    <section class="about card">
-      <p><b>Developed by:</b> Sonam Sharma • Maths Mistress • GSSS Multipurpose, Ludhiana</p>
-    </section>
-  </main>
-
-  <footer>
-    <span>Works offline • Install via “Add to Home Screen”</span>
-  </footer>
-
-  <script src="app.js"></script>
-
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
