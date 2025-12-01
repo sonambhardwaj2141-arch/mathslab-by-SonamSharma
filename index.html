@@ -1,107 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MathsLab by Sonam — TrignoTool</title>
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#6a00f4" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <header class="hero">
-      <h1>MathsLab by Sonam — <span class="sub">TrignoTool</span></h1>
-      <p class="subtitle">
-        Height • Distance • Angle • Hypotenuse — find any one by entering the other two
-      </p>
-      <p class="byline">
-        Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose,
-        Ludhiana
-      </p>
-      <button id="startBtn" class="cta">Start TrignoTool</button>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MathsLab by Sonam — Smart TrignoTool</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-    <section class="gallery" aria-label="Activity photos">
-      <img src="images/gallery_1.jpg" alt="Students activity 1" loading="lazy" />
-      <img src="images/gallery_2.jpg" alt="Students activity 2" loading="lazy" />
-      <img src="images/gallery_3.jpg" alt="Students activity 3" loading="lazy" />
-      <img src="images/gallery_4.jpg" alt="Students activity 4" loading="lazy" />
-      <img src="images/gallery_5.jpg" alt="Students activity 5" loading="lazy" />
+<body>
+  <header class="hero">
+    <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
+    <p class="subtitle">Enter ANY two values to find the third one</p>
+    <button id="startBtn" class="cta">Start Tool</button>
+  </header>
+
+  <main id="tool" class="hidden">
+    <!-- STEP 1 -->
+    <section class="card">
+      <h2>Which value do you want to find?</h2>
+      <select id="findValue">
+        <option value="height">Height (H)</option>
+        <option value="distance">Horizontal Distance (D)</option>
+        <option value="angle">Angle θ</option>
+        <option value="hyp">Hypotenuse</option>
+      </select>
     </section>
 
-    <main id="tool" class="hidden">
-      <section class="card">
-        <h2>Choose what to find</h2>
-        <div class="solve-for">
-          <label><input type="radio" name="solve" value="height" checked /> Height</label>
-          <label><input type="radio" name="solve" value="distance" /> Distance</label>
-          <label><input type="radio" name="solve" value="angle" /> Angle θ</label>
-          <label><input type="radio" name="solve" value="hyp" /> Hypotenuse</label>
-        </div>
-      </section>
+    <!-- STEP 2 -->
+    <section class="card">
+      <h2>Which two values do you know?</h2>
 
-      <section class="card">
-        <h2>Enter the known values</h2>
+      <div class="row">
+        <label>First known value</label>
+        <select id="known1">
+          <option value="height">Height (H)</option>
+          <option value="distance">Horizontal Distance (D)</option>
+          <option value="angle">Angle θ</option>
+          <option value="hyp">Hypotenuse</option>
+        </select>
+      </div>
 
-        <div class="form">
-          <div class="row">
-            <label for="height">Height</label>
-            <input id="height" type="number" step="any" placeholder="e.g., 12.5" />
-            <select id="heightUnit" class="unit">
-              <option value="m">m</option>
-              <option value="km">km</option>
-              <option value="cm">cm</option>
-              <option value="dm">dm</option>
-            </select>
-          </div>
+      <div class="row">
+        <label>Second known value</label>
+        <select id="known2">
+          <option value="height">Height (H)</option>
+          <option value="distance">Horizontal Distance (D)</option>
+          <option value="angle">Angle θ</option>
+          <option value="hyp">Hypotenuse</option>
+        </select>
+      </div>
+    </section>
 
-          <div class="row">
-            <label for="distance">Distance</label>
-            <input id="distance" type="number" step="any" placeholder="e.g., 20" />
-            <select id="distanceUnit" class="unit">
-              <option value="m">m</option>
-              <option value="km">km</option>
-              <option value="cm">cm</option>
-              <option value="dm">dm</option>
-            </select>
-          </div>
+    <!-- STEP 3 -->
+    <section class="card">
+      <h2>Enter the two known values</h2>
 
-          <div class="row">
-            <label for="angle">Angle θ</label>
-            <input id="angle" type="number" step="0.1" placeholder="e.g., 30" />
-            <span>degrees</span>
-          </div>
+      <div id="inputsArea"></div>
 
-          <div class="buttons">
-            <button id="calc">Calculate</button>
-            <button id="clear" class="ghost">Clear</button>
-          </div>
-        </div>
-      </section>
+      <button id="calc">Calculate</button>
+      <button id="clear" class="ghost">Clear</button>
+    </section>
 
-      <section class="card" id="result-card" style="display: none">
-        <h2>Result</h2>
-        <div id="result"></div>
-        <div id="steps" class="steps"></div>
-      </section>
+    <!-- STEP 4 -->
+    <section class="card" id="result-card" style="display:none;">
+      <h2>Result</h2>
+      <div id="result"></div>
+      <pre id="steps" class="steps"></pre>
+    </section>
+  </main>
 
-      <section class="about card">
-        <p>
-          <b>Developed by:</b> Sonam Sharma • Maths Mistress • GSSS Multipurpose, Ludhiana
-        </p>
-      </section>
-    </main>
-
-    <footer>
-      <span>Works offline • Install via “Add to Home Screen”</span>
-    </footer>
-
-    <script src="app.js"></script>
-  </body>
+  <script src="app.js"></script>
+</body>
 </html>
