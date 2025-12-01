@@ -1,155 +1,243 @@
 function $(q) {
-  return document.querySelector(q)
+  return document.querySelector(q);
 }
-const startBtn = $('#startBtn')
-const tool = $('#tool')
-const gallery = $('.gallery')
+
+const startBtn = $("#startBtn");
+const tool = $("#tool");
+const gallery = $(".gallery");
+
 async function loadGallery() {
-  if (!gallery) return
+  if (!gallery) return;
   try {
-    const res = await fetch('images/')
-    const html = await res.text()
-    const tmp = document.createElement('div')
-    tmp.innerHTML = html
-    const links = Array.from(tmp.querySelectorAll('a'))
+    const res = await fetch("images/");
+    const html = await res.text();
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    const links = Array.from(tmp.querySelectorAll("a"));
     const urls = links
-      .map((a) => a.getAttribute('href'))
+      .map((a) => a.getAttribute("href"))
       .filter((h) => h && /\.(png|jpe?g|webp|gif)$/i.test(h))
       .map((h) =>
-        h.startsWith('http') ? h : 'images/' + h.replace(/^\/+/, '')
-      )
+        h.startsWith("http") ? h : "images/" + h.replace(/^\/+/, "")
+      );
     if (urls.length) {
-      gallery.innerHTML = ''
+      gallery.innerHTML = "";
       urls.forEach((u) => {
-        const img = new Image()
-        img.src = u
-        img.loading = 'lazy'
-        img.alt = 'Uploaded image'
-        gallery.appendChild(img)
-      })
+        const img = new Image();
+        img.src = u;
+        img.loading = "lazy";
+        img.alt = "Uploaded image";
+        gallery.appendChild(img);
+      });
     }
   } catch (e) {}
 }
-document.addEventListener('DOMContentLoaded', loadGallery)
 
-startBtn.addEventListener('click', () => {
-  const isHidden = tool.classList.contains('hidden')
+document.addEventListener("DOMContentLoaded", loadGallery);
+
+startBtn.addEventListener("click", () => {
+  const isHidden = tool.classList.contains("hidden");
   if (isHidden) {
-    tool.classList.remove('hidden')
-    if (gallery) gallery.style.display = 'none'
-    startBtn.textContent = 'Home'
-    tool.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    tool.classList.remove("hidden");
+    if (gallery) gallery.style.display = "none";
+    startBtn.textContent = "Home";
+    tool.scrollIntoView({ behavior: "smooth", block: "start" });
   } else {
-    tool.classList.add('hidden')
-    if (gallery) gallery.style.display = ''
-    loadGallery()
-    startBtn.textContent = 'Start TrignoTool'
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    tool.classList.add("hidden");
+    if (gallery) gallery.style.display = "";
+    loadGallery();
+    startBtn.textContent = "Start TrignoTool";
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
-})
+});
 
-const rcard = $('#result-card'),
-  rdiv = $('#result'),
-  sdiv = $('#steps')
-const inputs = { h: $('#height'), d: $('#distance'), a: $('#angle') }
-const units = { hu: $('#heightUnit'), du: $('#distanceUnit') }
-const calcBtn = $('#calc'),
-  clearBtn = $('#clear')
+const rcard = $("#result-card"),
+  rdiv = $("#result"),
+  sdiv = $("#steps");
+
+const inputs = { h: $("#height"), d: $("#distance"), a: $("#angle") };
+const units = { hu: $("#heightUnit"), du: $("#distanceUnit") };
+
+const calcBtn = $("#calc"),
+  clearBtn = $("#clear");
 
 const toMeters = {
   m: (v) => v,
   km: (v) => v * 1000,
   cm: (v) => v / 100,
-  dm: (v) => v / 10
-}
+  dm: (v) => v / 10,
+};
+
 const fromMeters = {
   m: (v) => v,
   km: (v) => v / 1000,
   cm: (v) => v * 100,
-  dm: (v) => v * 10
-}
+  dm: (v) => v * 10,
+};
 
 function getSolveFor() {
-  return document.querySelector('input[name="solve"]:checked').value
+  return document.querySelector('input[name="solve"]:checked').value;
 }
+
 function degToRad(deg) {
-  return (deg * Math.PI) / 180
+  return (deg * Math.PI) / 180;
 }
+
 function radToDeg(rad) {
-  return (rad * 180) / Math.PI
+  return (rad * 180) / Math.PI;
 }
+
 function validatePositive(v) {
-  return !(isNaN(v) || v <= 0)
+  return !(isNaN(v) || v <= 0);
 }
 
 function compute() {
-  const solve = getSolveFor()
-  const Hraw = parseFloat(inputs.h.value)
-  const Draw = parseFloat(inputs.d.value)
-  const A = parseFloat(inputs.a.value)
+  const solve = getSolveFor();
+  const Hraw = parseFloat(inputs.h.value);
+  const Draw = parseFloat(inputs.d.value);
+  const A = parseFloat(inputs.a.value);
+
   const Hunit = units.hu.value,
-    Dunit = units.du.value
-  let H = validatePositive(Hraw) ? toMeters[Hunit](Hraw) : null
-  let D = validatePositive(Draw) ? toMeters[Dunit](Draw) : null
+    Dunit = units.du.value;
+
+  let H = validatePositive(Hraw) ? toMeters[Hunit](Hraw) : null;
+  let D = validatePositive(Draw) ? toMeters[Dunit](Draw) : null;
 
   let result = null,
-    steps = '',
-    outUnit = 'm'
+    steps = "",
+    outUnit = "m";
 
-  if (solve === 'height') {
+  // ---------------------------------------------------
+  // HEIGHT
+  // ---------------------------------------------------
+  if (solve === "height") {
     if (D === null || isNaN(A) || A <= 0 || A >= 90) {
-      alert('Enter a positive distance and an angle between 0° and 90°.')
-      return
+      alert("Enter a positive distance and an angle between 0° and 90°.");
+      return;
     }
-    const theta = degToRad(A)
-    const Hm = D * Math.tan(theta)
-    result = fromMeters[Hunit](Hm)
-    outUnit = Hunit
-    steps = `tan(θ) = height / distance\n⇒ height = distance × tan(θ)\n⇒ height = ${Draw} ${Dunit} × tan(${A}°)\n⇒ height ≈ ${result.toFixed(
-      2
-    )} ${outUnit}`
-    show('Height', result, ` ${outUnit}`)
-  } else if (solve === 'distance') {
-    if (H === null || isNaN(A) || A <= 0 || A >= 90) {
-      alert('Enter a positive height and an angle between 0° and 90°.')
-      return
-    }
-    const theta = degToRad(A)
-    const Dm = H / Math.tan(theta)
-    result = fromMeters[Dunit](Dm)
-    outUnit = Dunit
-    steps = `tan(θ) = height / distance\n⇒ distance = height / tan(θ)\n⇒ distance = ${Hraw} ${Hunit} / tan(${A}°)\n⇒ distance ≈ ${result.toFixed(
-      2
-    )} ${outUnit}`
-    show('Distance', result, ` ${outUnit}`)
-  } else {
-    if (H === null || D === null) {
-      alert('Enter positive height and distance.')
-      return
-    }
-    const theta = radToDeg(Math.atan(H / D))
-    result = theta
-    steps = `tan(θ) = height / distance\n⇒ θ = arctan(height / distance)\n⇒ θ = arctan(${Hraw} ${Hunit} / ${Draw} ${Dunit})\n⇒ θ ≈ ${theta.toFixed(
-      2
-    )}°`
-    show('Angle θ', result, '°')
+    const theta = degToRad(A);
+    const Hm = D * Math.tan(theta);
+    result = fromMeters[Hunit](Hm);
+    outUnit = Hunit;
+
+    steps = `tan(θ) = height / distance
+⇒ height = distance × tan(θ)
+⇒ height = ${Draw} ${Dunit} × tan(${A}°)
+⇒ height ≈ ${result.toFixed(2)} ${outUnit}`;
+
+    show("Height", result, ` ${outUnit}`);
   }
-  sdiv.textContent = steps
-  rcard.style.display = 'block'
+
+  // ---------------------------------------------------
+  // DISTANCE
+  // ---------------------------------------------------
+  else if (solve === "distance") {
+    if (H === null || isNaN(A) || A <= 0 || A >= 90) {
+      alert("Enter a positive height and an angle between 0° and 90°.");
+      return;
+    }
+    const theta = degToRad(A);
+    const Dm = H / Math.tan(theta);
+    result = fromMeters[Dunit](Dm);
+    outUnit = Dunit;
+
+    steps = `tan(θ) = height / distance
+⇒ distance = height / tan(θ)
+⇒ distance = ${Hraw} ${Hunit} / tan(${A}°)
+⇒ distance ≈ ${result.toFixed(2)} ${outUnit}`;
+
+    show("Distance", result, ` ${outUnit}`);
+  }
+
+  // ---------------------------------------------------
+  // ⭐ NEW FEATURE: HYPOTENUSE
+  // ---------------------------------------------------
+  else if (solve === "hyp") {
+    const hGiven = H !== null;
+    const dGiven = D !== null;
+    const aGiven = !isNaN(A) && A > 0 && A < 90;
+
+    let count = 0;
+    if (hGiven) count++;
+    if (dGiven) count++;
+    if (aGiven) count++;
+
+    if (count < 2) {
+      alert(
+        "Enter ANY TWO values:\n• Height & Distance\n• Height & Angle\n• Distance & Angle"
+      );
+      return;
+    }
+
+    // CASE 1: HEIGHT + DISTANCE
+    if (hGiven && dGiven) {
+      const hypM = Math.sqrt(H * H + D * D);
+      result = hypM;
+      steps = `Hypotenuse = √(height² + distance²)
+⇒ Hyp = √(${Hraw}² + ${Draw}²)
+⇒ Hyp ≈ ${hypM.toFixed(2)} m`;
+      show("Hypotenuse", result, " m");
+    }
+
+    // CASE 2: HEIGHT + ANGLE
+    else if (hGiven && aGiven) {
+      const theta = degToRad(A);
+      const hypM = H / Math.sin(theta);
+      result = hypM;
+      steps = `Hypotenuse = height ÷ sin(θ)
+⇒ Hyp = ${Hraw} ${Hunit} ÷ sin(${A}°)
+⇒ Hyp ≈ ${hypM.toFixed(2)} m`;
+      show("Hypotenuse", result, " m");
+    }
+
+    // CASE 3: DISTANCE + ANGLE
+    else if (dGiven && aGiven) {
+      const theta = degToRad(A);
+      const hypM = D / Math.cos(theta);
+      result = hypM;
+      steps = `Hypotenuse = distance ÷ cos(θ)
+⇒ Hyp = ${Draw} ${Dunit} ÷ cos(${A}°)
+⇒ Hyp ≈ ${hypM.toFixed(2)} m`;
+      show("Hypotenuse", result, " m");
+    }
+  }
+
+  // ---------------------------------------------------
+  // ANGLE
+  // ---------------------------------------------------
+  else {
+    if (H === null || D === null) {
+      alert("Enter positive height and distance.");
+      return;
+    }
+    const theta = radToDeg(Math.atan(H / D));
+    result = theta;
+
+    steps = `tan(θ) = height / distance
+⇒ θ = arctan(height / distance)
+⇒ θ = arctan(${Hraw} ${Hunit} / ${Draw} ${Dunit})
+⇒ θ ≈ ${theta.toFixed(2)}°`;
+
+    show("Angle θ", result, "°");
+  }
+
+  sdiv.textContent = steps;
+  rcard.style.display = "block";
 }
 
-function show(label, value, unit = ' m') {
-  rdiv.textContent = `${label} = ${Number(value).toFixed(2)}${unit}`
+function show(label, value, unit = " m") {
+  rdiv.textContent = `${label} = ${Number(value).toFixed(2)}${unit}`;
 }
 
-$('#calc').addEventListener('click', compute)
-$('#clear').addEventListener('click', () => {
-  inputs.h.value = ''
-  inputs.d.value = ''
-  inputs.a.value = ''
-  rcard.style.display = 'none'
-})
+$("#calc").addEventListener("click", compute);
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
+$("#clear").addEventListener("click", () => {
+  inputs.h.value = "";
+  inputs.d.value = "";
+  inputs.a.value = "";
+  rcard.style.display = "none";
+});
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
 }
