@@ -12,12 +12,22 @@ const resultCard = $("#result-card");
 const resultDiv = $("#result");
 const stepsDiv = $("#steps");
 
-// UI Toggle
+
+// ⭐ START ⇄ HOME BUTTON FIXED
 startBtn.addEventListener("click", () => {
-  tool.classList.toggle("hidden");
+  if (tool.classList.contains("hidden")) {
+    tool.classList.remove("hidden");
+    startBtn.textContent = "Home";
+    window.scrollTo(0, 0);
+  } else {
+    tool.classList.add("hidden");
+    startBtn.textContent = "Start TrignoTool";
+    window.scrollTo(0, 0);
+  }
 });
 
-// Generate input fields
+
+// ⭐ UPDATE INPUT FIELDS BASED ON SELECTION
 function updateInputs() {
   inputsArea.innerHTML = "";
 
@@ -25,9 +35,9 @@ function updateInputs() {
   const k2 = known2.value;
   const target = findValue.value;
 
-  if (k1 === target || k2 === target || k1 === k2) return;
+  if (k1 === k2 || k1 === target || k2 === target) return;
 
-  const fields = {
+  const labels = {
     height: "Height (H)",
     distance: "Horizontal Distance (D)",
     angle: "Angle θ (degrees)",
@@ -38,8 +48,8 @@ function updateInputs() {
     const row = document.createElement("div");
     row.className = "row";
     row.innerHTML = `
-      <label>${fields[val]}</label>
-      <input type="number" step="any" id="${val}Input" placeholder="Enter ${fields[val]}"/>
+      <label>${labels[val]}</label>
+      <input type="number" step="any" id="${val}Input" placeholder="Enter ${labels[val]}">
     `;
     inputsArea.appendChild(row);
   });
@@ -49,14 +59,15 @@ known1.addEventListener("change", updateInputs);
 known2.addEventListener("change", updateInputs);
 findValue.addEventListener("change", updateInputs);
 
-// Calculate
+
+// ⭐ CALCULATION SECTION
 $("#calc").addEventListener("click", () => {
   const target = findValue.value;
   const k1 = known1.value;
   const k2 = known2.value;
 
   if (k1 === k2 || k1 === target || k2 === target) {
-    alert("Invalid selection. Choose two different known values.");
+    alert("Invalid selection. Please choose two different known values.");
     return;
   }
 
@@ -68,83 +79,78 @@ $("#calc").addEventListener("click", () => {
   stepsDiv.textContent = "";
   resultDiv.textContent = "";
 
-  // Height + Distance → Angle
+  function rad(x) { return (x * Math.PI) / 180; }
+  function deg(x) { return (x * 180) / Math.PI; }
+
+
+  // ⭐ ALL VALID TRIGONOMETRIC COMBINATIONS
+
+  // HEIGHT + DISTANCE → ANGLE
   if (target === "angle" && H && D) {
-    let theta = Math.atan(H / D) * (180 / Math.PI);
+    let theta = deg(Math.atan(H / D));
     resultDiv.textContent = `Angle θ = ${theta.toFixed(2)}°`;
-    stepsDiv.textContent =
-      `tan(θ) = H/D\nθ = arctan(${H}/${D})\nθ = ${theta.toFixed(2)}°`;
+    stepsDiv.textContent = `tan(θ) = H/D\nθ = arctan(${H}/${D})\nθ = ${theta.toFixed(2)}°`;
   }
 
-  // Height + Angle → Distance
+  // HEIGHT + ANGLE → DISTANCE
   else if (target === "distance" && H && A) {
-    let rad = A * Math.PI / 180;
-    let dist = H / Math.tan(rad);
+    let dist = H / Math.tan(rad(A));
     resultDiv.textContent = `Horizontal Distance = ${dist.toFixed(2)} units`;
-    stepsDiv.textContent =
-      `tan(θ) = H/D\nD = H/tan(${A}°)\nD = ${dist.toFixed(2)}`;
+    stepsDiv.textContent = `D = H / tan(${A}°)\nD = ${dist.toFixed(2)}`;
   }
 
-  // Distance + Angle → Height
+  // DISTANCE + ANGLE → HEIGHT
   else if (target === "height" && D && A) {
-    let rad = A * Math.PI / 180;
-    let h = D * Math.tan(rad);
+    let h = D * Math.tan(rad(A));
     resultDiv.textContent = `Height = ${h.toFixed(2)} units`;
-    stepsDiv.textContent =
-      `H = D × tan(${A}°)\nH = ${h.toFixed(2)}`;
+    stepsDiv.textContent = `H = D × tan(${A}°)\nH = ${h.toFixed(2)}`;
   }
 
-  // Height + Distance → Hyp
+  // HEIGHT + DISTANCE → HYPOTENUSE
   else if (target === "hyp" && H && D) {
     let hyp = Math.sqrt(H * H + D * D);
     resultDiv.textContent = `Hypotenuse = ${hyp.toFixed(2)} units`;
-    stepsDiv.textContent =
-      `Hyp = √(H² + D²)\nHyp = ${hyp.toFixed(2)}`;
+    stepsDiv.textContent = `Hyp = √(H² + D²)\nHyp = ${hyp.toFixed(2)}`;
   }
 
-  // Height + Hyp → Distance
+  // HEIGHT + HYP → DISTANCE
   else if (target === "distance" && H && Hyp) {
-    let D2 = Math.sqrt(Hyp * Hyp - H * H);
-    resultDiv.textContent = `Horizontal Distance = ${D2.toFixed(2)} units`;
-    stepsDiv.textContent =
-      `D = √(Hyp² - H²)\nD = ${D2.toFixed(2)}`;
+    let d2 = Math.sqrt(Hyp * Hyp - H * H);
+    resultDiv.textContent = `Horizontal Distance = ${d2.toFixed(2)} units`;
+    stepsDiv.textContent = `D = √(Hyp² - H²)\nD = ${d2.toFixed(2)}`;
   }
 
-  // Distance + Hyp → Height
+  // DISTANCE + HYP → HEIGHT
   else if (target === "height" && D && Hyp) {
-    let H2 = Math.sqrt(Hyp * Hyp - D * D);
-    resultDiv.textContent = `Height = ${H2.toFixed(2)} units`;
-    stepsDiv.textContent =
-      `H = √(Hyp² - D²)\nH = ${H2.toFixed(2)}`;
+    let h2 = Math.sqrt(Hyp * Hyp - D * D);
+    resultDiv.textContent = `Height = ${h2.toFixed(2)} units`;
+    stepsDiv.textContent = `H = √(Hyp² - D²)\nH = ${h2.toFixed(2)}`;
   }
 
-  // Hyp + Angle → Height
+  // HYP + ANGLE → HEIGHT
   else if (target === "height" && Hyp && A) {
-    let rad = A * Math.PI / 180;
-    let h = Hyp * Math.sin(rad);
+    let h = Hyp * Math.sin(rad(A));
     resultDiv.textContent = `Height = ${h.toFixed(2)} units`;
-    stepsDiv.textContent =
-      `H = Hyp × sin(${A}°)\nH = ${h.toFixed(2)}`;
+    stepsDiv.textContent = `H = Hyp × sin(${A}°)\nH = ${h.toFixed(2)}`;
   }
 
-  // Hyp + Angle → Distance
+  // HYP + ANGLE → DISTANCE
   else if (target === "distance" && Hyp && A) {
-    let rad = A * Math.PI / 180;
-    let d = Hyp * Math.cos(rad);
+    let d = Hyp * Math.cos(rad(A));
     resultDiv.textContent = `Horizontal Distance = ${d.toFixed(2)} units`;
-    stepsDiv.textContent =
-      `D = Hyp × cos(${A}°)\nD = ${d.toFixed(2)}`;
+    stepsDiv.textContent = `D = Hyp × cos(${A}°)\nD = ${d.toFixed(2)}`;
   }
 
   else {
-    alert("Please enter correct values.");
+    alert("Please enter correct numeric values.");
     return;
   }
 
   resultCard.style.display = "block";
 });
 
-// Clear
+
+// ⭐ CLEAR BUTTON
 $("#clear").addEventListener("click", () => {
   inputsArea.innerHTML = "";
   resultCard.style.display = "none";
