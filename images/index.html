@@ -1,21 +1,115 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Images index</title>
+    <title>MathsLab by Sonam — Smart TrignoTool</title>
+    <meta name="theme-color" content="#6a00f4" />
+    <link rel="stylesheet" href="style.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
+
   <body>
-    <h1>Images</h1>
-    <ul>
-      <li><a href="31bed65d-2789-4f9c-af81-7d5508f6f8f7.jpeg">31bed65d-2789-4f9c-af81-7d5508f6f8f7.jpeg</a></li>
-      <li><a href="798ec08c-a431-432c-ab1d-2d192e7f5415.jpeg">798ec08c-a431-432c-ab1d-2d192e7f5415.jpeg</a></li>
-      <li><a href="79c019ca-1357-4e0c-8def-f1be4ce9b8c0.jpeg">79c019ca-1357-4e0c-8def-f1be4ce9b8c0.jpeg</a></li>
-      <li><a href="83a24678-20fc-4425-a22b-339f532812fd.jpeg">83a24678-20fc-4425-a22b-339f532812fd.jpeg</a></li>
-      <li><a href="93e699de-1605-4766-be03-a7530ef3405c.jpeg">93e699de-1605-4766-be03-a7530ef3405c.jpeg</a></li>
-      <li><a href="dbf7c0fe-fbac-431e-ac70-1ceb4ea57236.jpeg">dbf7c0fe-fbac-431e-ac70-1ceb4ea57236.jpeg</a></li>
-      <li><a href="e1af4ac4-b7ec-4f48-b58d-90694693a17f.jpeg">e1af4ac4-b7ec-4f48-b58d-90694693a17f.jpeg</a></li>
-      <li><a href="gallery_7.jpeg">gallery_7.jpeg</a></li>
-    </ul>
+    <!-- ⭐ HERO SECTION -->
+    <header class="hero">
+      <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
+
+      <p class="subtitle">
+        Height • Horizontal Distance • Angle θ • Hypotenuse — find any one by entering the other two
+      </p>
+
+      <p class="byline">
+        Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose, Ludhiana
+      </p>
+
+      <button id="startBtn" class="cta">Start TrignoTool</button>
+    </header>
+
+    <!-- ⭐ GALLERY WITH 8 IMAGES -->
+    <section class="gallery">
+      <img src="images/gallery_1.jpeg" alt="Activity 1" loading="lazy" />
+      <img src="images/gallery_2.jpeg" alt="Activity 2" loading="lazy" />
+      <img src="images/gallery_3.jpeg" alt="Activity 3" loading="lazy" />
+      <img src="images/gallery_4.jpeg" alt="Activity 4" loading="lazy" />
+      <img src="images/gallery_5.jpeg" alt="Activity 5" loading="lazy" />
+      <img src="images/gallery_6.jpeg" alt="Activity 6" loading="lazy" />
+      <img src="images/gallery_7.jpeg" alt="Activity 7" loading="lazy" />
+      <img src="images/gallery_8.jpeg" alt="Activity 8" loading="lazy" />
+    </section>
+
+    <!-- ⭐ SMART TRIGNO TOOL -->
+    <main id="tool" class="hidden">
+
+      <!-- STEP 1 -->
+      <section class="card">
+        <h2>Which value do you want to find?</h2>
+        <select id="findValue">
+          <option value="height">Height (H)</option>
+          <option value="distance">Horizontal Distance (D)</option>
+          <option value="angle">Angle θ</option>
+          <option value="hyp">Hypotenuse</option>
+        </select>
+      </section>
+
+      <!-- STEP 2 -->
+      <section class="card">
+        <h2>Which two values do you know?</h2>
+
+        <div class="row">
+          <label>First known value</label>
+          <select id="known1">
+            <option value="height">Height (H)</option>
+            <option value="distance">Horizontal Distance (D)</option>
+            <option value="angle">Angle θ</option>
+            <option value="hyp">Hypotenuse</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Second known value</label>
+          <select id="known2">
+            <option value="height">Height (H)</option>
+            <option value="distance">Horizontal Distance (D)</option>
+            <option value="angle">Angle θ</option>
+            <option value="hyp">Hypotenuse</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section class="card">
+        <h2>Enter the two known values</h2>
+
+        <div id="inputsArea"></div>
+
+        <button id="calc">Calculate</button>
+        <button id="clear" class="ghost">Clear</button>
+      </section>
+
+      <!-- RESULT -->
+      <section class="card" id="result-card" style="display:none;">
+        <h2>Result</h2>
+        <div id="result"></div>
+        <pre id="steps" class="steps"></pre>
+      </section>
+
+      <section class="about card">
+        <p>
+          <b>Developed by:</b> Sonam Sharma • Maths Mistress • GSSS Multipurpose, Ludhiana
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>Works offline • Install via “Add to Home Screen”</span>
+    </footer>
+
+    <script src="app.js"></script>
   </body>
 </html>
