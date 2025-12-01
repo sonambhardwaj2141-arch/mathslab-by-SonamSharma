@@ -18,7 +18,7 @@
     <header class="hero">
       <h1>MathsLab by Sonam — <span class="sub">TrignoTool</span></h1>
       <p class="subtitle">
-        Height • Distance • Angle — find any one by entering the other two
+        Height • Distance • Angle • Hypotenuse — find any one by entering the other two
       </p>
       <p class="byline">
         Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose,
@@ -27,54 +27,22 @@
       <button id="startBtn" class="cta">Start TrignoTool</button>
     </header>
 
-    <!-- ✅ FIXED GALLERY IMAGE PATHS -->
     <section class="gallery" aria-label="Activity photos">
-      <img
-        src="images/gallery_1.jpg"
-        alt="Students activity 1"
-        loading="lazy"
-      />
-      <img
-        src="images/gallery_2.jpg"
-        alt="Students activity 2"
-        loading="lazy"
-      />
-      <img
-        src="images/gallery_3.jpg"
-        alt="Students activity 3"
-        loading="lazy"
-      />
-      <img
-        src="images/gallery_4.jpg"
-        alt="Students activity 4"
-        loading="lazy"
-      />
-      <img
-        src="images/gallery_5.jpg"
-        alt="Students activity 5"
-        loading="lazy"
-      />
+      <img src="images/gallery_1.jpg" alt="Students activity 1" loading="lazy" />
+      <img src="images/gallery_2.jpg" alt="Students activity 2" loading="lazy" />
+      <img src="images/gallery_3.jpg" alt="Students activity 3" loading="lazy" />
+      <img src="images/gallery_4.jpg" alt="Students activity 4" loading="lazy" />
+      <img src="images/gallery_5.jpg" alt="Students activity 5" loading="lazy" />
     </section>
 
     <main id="tool" class="hidden">
       <section class="card">
         <h2>Choose what to find</h2>
         <div class="solve-for">
-          <label
-            ><input type="radio" name="solve" value="height" checked />
-            Height</label
-          >
-          <label
-            ><input type="radio" name="solve" value="distance" />
-            Distance</label
-          >
-          <label
-            ><input type="radio" name="solve" value="angle" /> Angle θ</label
-          >
-          <label
-            ><input type="radio" name="solve" value="hyp" /> 
-            Hypotenuse</label
-          >
+          <label><input type="radio" name="solve" value="height" checked /> Height</label>
+          <label><input type="radio" name="solve" value="distance" /> Distance</label>
+          <label><input type="radio" name="solve" value="angle" /> Angle θ</label>
+          <label><input type="radio" name="solve" value="hyp" /> Hypotenuse</label>
         </div>
       </section>
 
@@ -84,12 +52,7 @@
         <div class="form">
           <div class="row">
             <label for="height">Height</label>
-            <input
-              id="height"
-              type="number"
-              step="any"
-              placeholder="e.g., 12.5"
-            />
+            <input id="height" type="number" step="any" placeholder="e.g., 12.5" />
             <select id="heightUnit" class="unit">
               <option value="m">m</option>
               <option value="km">km</option>
@@ -100,12 +63,7 @@
 
           <div class="row">
             <label for="distance">Distance</label>
-            <input
-              id="distance"
-              type="number"
-              step="any"
-              placeholder="e.g., 20"
-            />
+            <input id="distance" type="number" step="any" placeholder="e.g., 20" />
             <select id="distanceUnit" class="unit">
               <option value="m">m</option>
               <option value="km">km</option>
@@ -135,8 +93,7 @@
 
       <section class="about card">
         <p>
-          <b>Developed by:</b> Sonam Sharma • Maths Mistress • GSSS
-          Multipurpose, Ludhiana
+          <b>Developed by:</b> Sonam Sharma • Maths Mistress • GSSS Multipurpose, Ludhiana
         </p>
       </section>
     </main>
