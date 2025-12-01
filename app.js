@@ -6,6 +6,9 @@ const startBtn = $("#startBtn");
 const tool = $("#tool");
 const gallery = $(".gallery");
 
+// ------------------------------------------------------------
+// LOAD GALLERY
+// ------------------------------------------------------------
 async function loadGallery() {
   if (!gallery) return;
   try {
@@ -17,9 +20,7 @@ async function loadGallery() {
     const urls = links
       .map((a) => a.getAttribute("href"))
       .filter((h) => h && /\.(png|jpe?g|webp|gif)$/i.test(h))
-      .map((h) =>
-        h.startsWith("http") ? h : "images/" + h.replace(/^\/+/, "")
-      );
+      .map((h) => (h.startsWith("http") ? h : "images/" + h.replace(/^\/+/, "")));
     if (urls.length) {
       gallery.innerHTML = "";
       urls.forEach((u) => {
@@ -35,6 +36,9 @@ async function loadGallery() {
 
 document.addEventListener("DOMContentLoaded", loadGallery);
 
+// ------------------------------------------------------------
+// TOGGLE HOME / TOOL VIEW
+// ------------------------------------------------------------
 startBtn.addEventListener("click", () => {
   const isHidden = tool.classList.contains("hidden");
   if (isHidden) {
@@ -51,6 +55,9 @@ startBtn.addEventListener("click", () => {
   }
 });
 
+// ------------------------------------------------------------
+// INPUT REFERENCES
+// ------------------------------------------------------------
 const rcard = $("#result-card"),
   rdiv = $("#result"),
   sdiv = $("#steps");
@@ -61,13 +68,13 @@ const units = { hu: $("#heightUnit"), du: $("#distanceUnit") };
 const calcBtn = $("#calc"),
   clearBtn = $("#clear");
 
+// UNIT CONVERSION
 const toMeters = {
   m: (v) => v,
   km: (v) => v * 1000,
   cm: (v) => v / 100,
   dm: (v) => v / 10,
 };
-
 const fromMeters = {
   m: (v) => v,
   km: (v) => v / 1000,
@@ -75,22 +82,25 @@ const fromMeters = {
   dm: (v) => v * 10,
 };
 
+// ------------------------------------------------------------
+// UTIL FUNCTIONS
+// ------------------------------------------------------------
 function getSolveFor() {
   return document.querySelector('input[name="solve"]:checked').value;
 }
-
 function degToRad(deg) {
   return (deg * Math.PI) / 180;
 }
-
 function radToDeg(rad) {
   return (rad * 180) / Math.PI;
 }
-
 function validatePositive(v) {
   return !(isNaN(v) || v <= 0);
 }
 
+// ------------------------------------------------------------
+// MAIN COMPUTE FUNCTION
+// ------------------------------------------------------------
 function compute() {
   const solve = getSolveFor();
   const Hraw = parseFloat(inputs.h.value);
@@ -107,9 +117,9 @@ function compute() {
     steps = "",
     outUnit = "m";
 
-  // ---------------------------------------------------
-  // HEIGHT
-  // ---------------------------------------------------
+  // ------------------------------------------------------------
+  // FIND HEIGHT
+  // ------------------------------------------------------------
   if (solve === "height") {
     if (D === null || isNaN(A) || A <= 0 || A >= 90) {
       alert("Enter a positive distance and an angle between 0° and 90°.");
@@ -117,6 +127,7 @@ function compute() {
     }
     const theta = degToRad(A);
     const Hm = D * Math.tan(theta);
+
     result = fromMeters[Hunit](Hm);
     outUnit = Hunit;
 
@@ -128,14 +139,15 @@ function compute() {
     show("Height", result, ` ${outUnit}`);
   }
 
-  // ---------------------------------------------------
-  // DISTANCE
-  // ---------------------------------------------------
+  // ------------------------------------------------------------
+  // FIND DISTANCE
+  // ------------------------------------------------------------
   else if (solve === "distance") {
     if (H === null || isNaN(A) || A <= 0 || A >= 90) {
       alert("Enter a positive height and an angle between 0° and 90°.");
       return;
     }
+
     const theta = degToRad(A);
     const Dm = H / Math.tan(theta);
     result = fromMeters[Dunit](Dm);
@@ -149,9 +161,9 @@ function compute() {
     show("Distance", result, ` ${outUnit}`);
   }
 
-  // ---------------------------------------------------
-  // ⭐ NEW FEATURE: HYPOTENUSE
-  // ---------------------------------------------------
+  // ------------------------------------------------------------
+  // ⭐ FIND HYPOTENUSE (NEW)
+  // ------------------------------------------------------------
   else if (solve === "hyp") {
     const hGiven = H !== null;
     const dGiven = D !== null;
@@ -163,53 +175,57 @@ function compute() {
     if (aGiven) count++;
 
     if (count < 2) {
-      alert(
-        "Enter ANY TWO values:\n• Height & Distance\n• Height & Angle\n• Distance & Angle"
-      );
+      alert("Enter ANY TWO values:\n• Height & Distance\n• Height & Angle\n• Distance & Angle");
       return;
     }
 
-    // CASE 1: HEIGHT + DISTANCE
+    // CASE 1 — HEIGHT & DISTANCE
     if (hGiven && dGiven) {
       const hypM = Math.sqrt(H * H + D * D);
       result = hypM;
       steps = `Hypotenuse = √(height² + distance²)
 ⇒ Hyp = √(${Hraw}² + ${Draw}²)
 ⇒ Hyp ≈ ${hypM.toFixed(2)} m`;
+
       show("Hypotenuse", result, " m");
     }
 
-    // CASE 2: HEIGHT + ANGLE
+    // CASE 2 — HEIGHT & ANGLE
     else if (hGiven && aGiven) {
       const theta = degToRad(A);
       const hypM = H / Math.sin(theta);
       result = hypM;
+
       steps = `Hypotenuse = height ÷ sin(θ)
 ⇒ Hyp = ${Hraw} ${Hunit} ÷ sin(${A}°)
 ⇒ Hyp ≈ ${hypM.toFixed(2)} m`;
+
       show("Hypotenuse", result, " m");
     }
 
-    // CASE 3: DISTANCE + ANGLE
+    // CASE 3 — DISTANCE & ANGLE
     else if (dGiven && aGiven) {
       const theta = degToRad(A);
       const hypM = D / Math.cos(theta);
       result = hypM;
+
       steps = `Hypotenuse = distance ÷ cos(θ)
 ⇒ Hyp = ${Draw} ${Dunit} ÷ cos(${A}°)
 ⇒ Hyp ≈ ${hypM.toFixed(2)} m`;
+
       show("Hypotenuse", result, " m");
     }
   }
 
-  // ---------------------------------------------------
-  // ANGLE
-  // ---------------------------------------------------
+  // ------------------------------------------------------------
+  // FIND ANGLE
+  // ------------------------------------------------------------
   else {
     if (H === null || D === null) {
       alert("Enter positive height and distance.");
       return;
     }
+
     const theta = radToDeg(Math.atan(H / D));
     result = theta;
 
@@ -225,10 +241,16 @@ function compute() {
   rcard.style.display = "block";
 }
 
+// ------------------------------------------------------------
+// SHOW RESULT
+// ------------------------------------------------------------
 function show(label, value, unit = " m") {
   rdiv.textContent = `${label} = ${Number(value).toFixed(2)}${unit}`;
 }
 
+// ------------------------------------------------------------
+// BUTTON EVENTS
+// ------------------------------------------------------------
 $("#calc").addEventListener("click", compute);
 
 $("#clear").addEventListener("click", () => {
@@ -238,6 +260,9 @@ $("#clear").addEventListener("click", () => {
   rcard.style.display = "none";
 });
 
+// ------------------------------------------------------------
+// SERVICE WORKER
+// ------------------------------------------------------------
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
