@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MathsLab by Sonam — Smart TrignoTool</title>
-    <meta name="theme-color" content="#6a00f4" />
-    <link rel="stylesheet" href="style.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MathsLab by Sonam — Smart TrignoTool</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
+<body>
 
-  <body>
+  <!-- ⭐ HOME PAGE WRAPPER -->
+  <div id="home">
+
     <header class="hero">
       <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
-
-      <!-- ⭐ UPDATED SUBTITLE -->
       <p class="subtitle">
         Height • Horizontal Distance • Angle θ • Hypotenuse — find any value using the other two
       </p>
@@ -31,7 +25,7 @@
       <button id="startBtn" class="cta">Start TrignoTool</button>
     </header>
 
-    <!-- ⭐ UPDATED GALLERY — ALL 8 IMAGES -->
+    <!-- ⭐ GALLERY SECTION (4 per row) -->
     <section class="gallery" aria-label="Activity photos">
       <img src="./images/gallery_1.jpeg" loading="lazy" />
       <img src="./images/gallery_2.jpeg" loading="lazy" />
@@ -43,70 +37,69 @@
       <img src="./images/gallery_8.jpeg" loading="lazy" />
     </section>
 
-    <main id="tool" class="hidden">
+  </div> <!-- END HOME -->
 
-      <!-- STEP 1 -->
-      <section class="card">
-        <h2>Which value do you want to find?</h2>
-        <select id="findValue">
+
+  <!-- ⭐ CALCULATOR PAGE -->
+  <main id="tool" class="hidden">
+
+    <button id="homeBtn" class="cta" style="margin-bottom: 15px;">Home</button>
+
+    <!-- STEP 1 -->
+    <section class="card">
+      <h2>Which value do you want to find?</h2>
+      <select id="findValue">
+        <option value="height">Height (H)</option>
+        <option value="distance">Horizontal Distance (D)</option>
+        <option value="angle">Angle θ</option>
+        <option value="hyp">Hypotenuse</option>
+      </select>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="card">
+      <h2>Which two values do you know?</h2>
+
+      <div class="row">
+        <label>First known value</label>
+        <select id="known1">
           <option value="height">Height (H)</option>
           <option value="distance">Horizontal Distance (D)</option>
           <option value="angle">Angle θ</option>
           <option value="hyp">Hypotenuse</option>
         </select>
-      </section>
+      </div>
 
-      <!-- STEP 2 -->
-      <section class="card">
-        <h2>Which two values do you know?</h2>
+      <div class="row">
+        <label>Second known value</label>
+        <select id="known2">
+          <option value="height">Height (H)</option>
+          <option value="distance">Horizontal Distance (D)</option>
+          <option value="angle">Angle θ</option>
+          <option value="hyp">Hypotenuse</option>
+        </select>
+      </div>
+    </section>
 
-        <div class="row">
-          <label>First known value</label>
-          <select id="known1">
-            <option value="height">Height (H)</option>
-            <option value="distance">Horizontal Distance (D)</option>
-            <option value="angle">Angle θ</option>
-            <option value="hyp">Hypotenuse</option>
-          </select>
-        </div>
+    <!-- STEP 3 -->
+    <section class="card">
+      <h2>Enter the two known values</h2>
+      <div id="inputsArea"></div>
 
-        <div class="row">
-          <label>Second known value</label>
-          <select id="known2">
-            <option value="height">Height (H)</option>
-            <option value="distance">Horizontal Distance (D)</option>
-            <option value="angle">Angle θ</option>
-            <option value="hyp">Hypotenuse</option>
-          </select>
-        </div>
-      </section>
+      <button id="calc">Calculate</button>
+      <button id="clear" class="ghost">Clear</button>
+    </section>
 
-      <!-- STEP 3 -->
-      <section class="card">
-        <h2>Enter the two known values</h2>
+    <!-- RESULT -->
+    <section class="card" id="result-card" style="display:none;">
+      <h2>Result</h2>
+      <div id="result"></div>
+      <pre id="steps" class="steps"></pre>
+    </section>
 
-        <div id="inputsArea"></div>
+  </main>
 
-        <button id="calc">Calculate</button>
-        <button id="clear" class="ghost">Clear</button>
-      </section>
+  <script src="app.js"></script>
 
-      <!-- STEP 4 -->
-      <section class="card" id="result-card" style="display:none;">
-        <h2>Result</h2>
-        <div id="result"></div>
-        <pre id="steps" class="steps"></pre>
-      </section>
-
-      <section class="about card">
-        <p><b>Developed by:</b> Sonam Sharma • Maths Mistress • GSSS Multipurpose, Ludhiana</p>
-      </section>
-    </main>
-
-    <footer>
-      <span>Works offline • Install via “Add to Home Screen”</span>
-    </footer>
-
-    <script src="app.js"></script>
-  </body>
+</body>
 </html>
