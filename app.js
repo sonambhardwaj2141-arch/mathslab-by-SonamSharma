@@ -31,6 +31,10 @@ const fromMeters = {
   in: v => v / 0.0254
 };
 
+/* ⭐ GET ELEMENTS */
+const stepsDiv = document.getElementById("steps");
+const toggleStepsBtn = document.getElementById("toggleSteps");
+
 /* ⭐ DYNAMIC INPUT FIELDS */
 function updateInputs() {
   const k1 = known1.value;
@@ -54,7 +58,10 @@ function updateInputs() {
     let html = `<div class="row"><label>${labels[v]}</label>`;
 
     if (v === "angle") {
-      html += `<input id="input_${v}" type="number" placeholder="Enter ${labels[v]}">`;
+      html += `
+        <input id="input_${v}" type="number" placeholder="Enter ${labels[v]}">
+        <span class="angleUnit">degrees</span>
+      `;
     } else {
       html += `
         <input id="input_${v}" type="number" step="any" placeholder="Enter ${labels[v]}">
@@ -92,7 +99,7 @@ calc.addEventListener("click", () => {
     const val = parseFloat(input.value);
     if (isNaN(val)) return null;
 
-    if (v === "angle") return val; 
+    if (v === "angle") return val;
 
     const unit = document.getElementById("unit_" + v).value;
     return toMeters[unit](val);
@@ -106,7 +113,7 @@ calc.addEventListener("click", () => {
   let result = null;
   let steps = "";
 
-  /* ⭐ FIND HEIGHT (H) */
+  /* ⭐ FIND HEIGHT */
   if (find === "height") {
     if (D != null && A != null) {
       result = D * Math.tan(degToRad(A));
@@ -114,7 +121,7 @@ calc.addEventListener("click", () => {
     }
     else if (S != null && A != null) {
       result = S * Math.sin(degToRad(A));
-      steps = `H = S × sin(θ)\nH = ${S} × sin(${A})`;
+      steps = `H = S × sin(θ)`;
     }
     else if (S != null && D != null) {
       result = Math.sqrt(S*S - D*D);
@@ -122,7 +129,7 @@ calc.addEventListener("click", () => {
     }
   }
 
-  /* ⭐ FIND DISTANCE (D) */
+  /* ⭐ FIND DISTANCE */
   if (find === "distance") {
     if (H != null && A != null) {
       result = H / Math.tan(degToRad(A));
@@ -138,7 +145,7 @@ calc.addEventListener("click", () => {
     }
   }
 
-  /* ⭐ FIND SLANT (S) */
+  /* ⭐ FIND SLANT */
   if (find === "slant") {
     if (H != null && D != null) {
       result = Math.sqrt(H*H + D*D);
@@ -154,7 +161,7 @@ calc.addEventListener("click", () => {
     }
   }
 
-  /* ⭐ FIND ANGLE (θ) */
+  /* ⭐ FIND ANGLE */
   if (find === "angle") {
     if (H != null && D != null) {
       result = radToDeg(Math.atan(H / D));
@@ -193,11 +200,11 @@ calc.addEventListener("click", () => {
   stepsDiv.textContent = steps;
 });
 
-/* ⭐ TOGGLE STEPS */
-toggleSteps.addEventListener("click", () => {
-  steps.classList.toggle("hidden");
-  toggleSteps.textContent =
-    steps.classList.contains("hidden") ? "Show Steps" : "Hide Steps";
+/* ⭐ SHOW/HIDE STEPS BUTTON */
+toggleStepsBtn.addEventListener("click", () => {
+  stepsDiv.classList.toggle("hidden");
+  toggleStepsBtn.textContent =
+    stepsDiv.classList.contains("hidden") ? "Show Steps" : "Hide Steps";
 });
 
 /* ⭐ CLEAR */
