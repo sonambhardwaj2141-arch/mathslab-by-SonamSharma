@@ -1,152 +1,169 @@
-// HOME → TOOL
+/* ⭐ START → TOOL */
 document.getElementById("startBtn").addEventListener("click", () => {
-
-  // Hide Home Page
   document.getElementById("home").style.display = "none";
-
-  // Show Tool
   document.getElementById("tool").classList.remove("hidden");
-
-  // Scroll
-  window.scrollTo({
-    top: document.getElementById("tool").offsetTop - 10,
-    behavior: "smooth"
-  });
-});
-
-
-// TOOL → HOME
-document.getElementById("homeBtn").addEventListener("click", () => {
-
-  document.getElementById("tool").classList.add("hidden");
-  document.getElementById("home").style.display = "block";
-
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+/* ⭐ TOOL → HOME */
+document.getElementById("homeBtn").addEventListener("click", () => {
+  document.getElementById("tool").classList.add("hidden");
+  document.getElementById("home").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 
-// =======================
-// DYNAMIC INPUT FIELDS
-// =======================
-function updateInputFields() {
-  const known1 = document.getElementById("known1").value;
-  const known2 = document.getElementById("known2").value;
+/* ⭐ UNIT CONVERSION */
+const toMeters = {
+  m: v => v,
+  cm: v => v / 100,
+  dm: v => v / 10,
+  km: v => v * 1000,
+  ft: v => v * 0.3048,
+  in: v => v * 0.0254
+};
 
-  const inputsArea = document.getElementById("inputsArea");
+const fromMeters = {
+  m: v => v,
+  cm: v => v * 100,
+  dm: v => v * 10,
+  km: v => v / 1000,
+  ft: v => v / 0.3048,
+  in: v => v / 0.0254
+};
+
+/* ⭐ Create dynamic input fields */
+function updateInputs() {
+  const k1 = known1.value;
+  const k2 = known2.value;
+
   inputsArea.innerHTML = "";
 
-  if (known1 === known2) {
-    inputsArea.innerHTML = `<p style="color:red;">Select two DIFFERENT values.</p>`;
+  if (k1 === k2) {
+    inputsArea.innerHTML = `<p style="color:red">Select two different values.</p>`;
     return;
   }
 
-  let fields = [known1, known2];
+  const labels = {
+    height: "Height (H)",
+    distance: "Horizontal Distance (D)",
+    slant: "Slant Distance",
+    angle: "Angle θ"
+  };
 
-  fields.forEach(v => {
-    let label = "";
-    if (v === "height") label = "Height (H)";
-    if (v === "distance") label = "Horizontal Distance (D)";
-    if (v === "angle") label = "Angle θ (degrees)";
-    if (v === "hyp") label = "Hypotenuse";
+  [k1, k2].forEach(val => {
+    let html = `<div class="row"><label>${labels[val]}</label>`;
 
-    inputsArea.innerHTML += `
-      <div class="row">
-        <label>${label}</label>
-        <input type="number" id="input_${v}" step="any" placeholder="Enter ${label}">
-      </div>
-    `;
+    if (val === "angle") {
+      html += `<input id="input_${val}" type="number" placeholder="Enter ${labels[val]}" step="any">`;
+    } else {
+      html += `
+        <input id="input_${val}" type="number" step="any" placeholder="Enter ${labels[val]}">
+        <select id="unit_${val}" class="unit">
+          <option value="m">m</option>
+          <option value="cm">cm</option>
+          <option value="dm">dm</option>
+          <option value="km">km</option>
+          <option value="ft">ft</option>
+          <option value="in">in</option>
+        </select>
+      `;
+    }
+
+    html += `</div>`;
+    inputsArea.innerHTML += html;
   });
 }
 
-document.getElementById("known1").addEventListener("change", updateInputFields);
-document.getElementById("known2").addEventListener("change", updateInputFields);
-updateInputFields();
+known1.addEventListener("change", updateInputs);
+known2.addEventListener("change", updateInputs);
+updateInputs();
 
+/* ⭐ CALCULATE */
+calc.addEventListener("click", () => {
+  const find = findValue.value;
+  let H = null, D = null, S = null, A = null;
 
-// =======================
-// MAIN CALCULATION LOGIC
-// =======================
-document.getElementById("calc").addEventListener("click", () => {
+  function get(v) {
+    const input = document.getElementById("input_" + v);
+    if (!input) return null;
+    const value = parseFloat(input.value);
+    if (isNaN(value)) return null;
 
-  const find = document.getElementById("findValue").value;
-  const known1 = document.getElementById("known1").value;
-  const known2 = document.getElementById("known2").value;
+    if (v === "angle") return value;
 
-  if (known1 === known2) {
-    alert("Please select two DIFFERENT known values.");
-    return;
+    const unit = document.getElementById("unit_" + v).value;
+    return toMeters[unit](value);
   }
 
-  let v1 = parseFloat(document.getElementById("input_" + known1)?.value);
-  let v2 = parseFloat(document.getElementById("input_" + known2)?.value);
+  H = get("height");
+  D = get("distance");
+  S = get("slant");
+  A = get("angle");
 
-  if (isNaN(v1) || isNaN(v2)) {
-    alert("Enter both values.");
-    return;
-  }
+  function degToRad(x) { return (x * Math.PI) / 180; }
+  function radToDeg(x) { return (x * 180) / Math.PI; }
 
-  let H = null, D = null, A = null, Hyp = null;
+  let result = null;
+  let steps = "";
 
-  if (known1 === "height") H = v1;
-  if (known1 === "distance") D = v1;
-  if (known1 === "angle") A = v1;
-  if (known1 === "hyp") Hyp = v1;
-
-  if (known2 === "height") H = v2;
-  if (known2 === "distance") D = v2;
-  if (known2 === "angle") A = v2;
-  if (known2 === "hyp") Hyp = v2;
-
-  function degToRad(x) { return (x*Math.PI)/180; }
-  function radToDeg(x) { return (x*180)/Math.PI; }
-
-  let result = null, steps = "";
-
-  // HEIGHT
+  /* ⭐ FIND HEIGHT */
   if (find === "height") {
-    if (A != null && D != null) {
+    if (D != null && A != null) {
       result = D * Math.tan(degToRad(A));
-      steps = `H = D × tan(θ)\nH = ${D} × tan(${A})`;
+      steps = `H = D × tan(θ)`;
+    }
+    if (S != null && D != null) {
+      result = Math.sqrt(S*S - D*D);
+      steps = `H = √(S² - D²)`;
     }
   }
 
-  // DISTANCE
+  /* ⭐ FIND DISTANCE */
   if (find === "distance") {
-    if (A != null && H != null) {
+    if (H != null && A != null) {
       result = H / Math.tan(degToRad(A));
-      steps = `D = H / tan(θ)\nD = ${H} / tan(${A})`;
+      steps = `D = H / tan(θ)`;
+    }
+    if (S != null && H != null) {
+      result = Math.sqrt(S*S - H*H);
+      steps = `D = √(S² - H²)`;
     }
   }
 
-  // ANGLE
+  /* ⭐ FIND SLANT DISTANCE */
+  if (find === "slant") {
+    if (H != null && D != null) {
+      result = Math.sqrt(H*H + D*D);
+      steps = `S = √(H² + D²)`;
+    }
+  }
+
+  /* ⭐ FIND ANGLE */
   if (find === "angle") {
     if (H != null && D != null) {
-      result = radToDeg(Math.atan(H / D));
-      steps = `θ = arctan(H/D)\nθ = arctan(${H}/${D})`;
-    }
-  }
-
-  // HYPOTENUSE
-  if (find === "hyp") {
-    if (H != null && D != null) {
-      result = Math.sqrt(H * H + D * D);
-      steps = `Hyp = √(H² + D²)\nHyp = √(${H}² + ${D}²)`;
+      result = radToDeg(Math.atan(H/D));
+      steps = `θ = arctan(H / D)`;
     }
   }
 
   if (result == null) {
-    alert("Invalid input combination.");
+    alert("Invalid or insufficient input values.");
     return;
   }
 
-  document.getElementById("result-card").style.display = "block";
-  document.getElementById("result").innerHTML = 
-    `${find.toUpperCase()} = ${result.toFixed(2)}`;
-  document.getElementById("steps").innerText = steps;
+  /* ⭐ Output in the SAME UNIT as the value being solved */
+  let outputUnit = "m";
+  if (find !== "angle") {
+    outputUnit = document.querySelector(`#unit_${find}`)?.value || "m";
+    result = fromMeters[outputUnit](result);
+  }
+
+  resultCard.style.display = "block";
+  result.textContent = `${find.toUpperCase()} = ${result.toFixed(2)} ${find === "angle" ? "°" : outputUnit}`;
+  stepsDiv.textContent = steps;
 });
 
-
-// CLEAR BUTTON
-document.getElementById("clear").addEventListener("click", () => {
-  document.getElementById("result-card").style.display = "none";
+/* ⭐ CLEAR */
+clear.addEventListener("click", () => {
+  resultCard.style.display = "none";
 });
