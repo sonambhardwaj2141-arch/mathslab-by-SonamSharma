@@ -31,7 +31,7 @@ const fromMeters = {
   in: v => v / 0.0254
 };
 
-/* ⭐ DYNAMIC INPUTS */
+/* ⭐ DYNAMIC INPUT FIELDS */
 function updateInputs() {
   const k1 = known1.value;
   const k2 = known2.value;
@@ -46,7 +46,7 @@ function updateInputs() {
   const labels = {
     height: "Height (H)",
     distance: "Horizontal Distance (D)",
-    slant: "Slant Distance",
+    slant: "Slant Distance (S)",
     angle: "Angle θ"
   };
 
@@ -78,71 +78,95 @@ known1.addEventListener("change", updateInputs);
 known2.addEventListener("change", updateInputs);
 updateInputs();
 
+/* ⭐ TRIG FUNCTIONS */
+function degToRad(x) { return x * Math.PI / 180; }
+function radToDeg(x) { return x * 180 / Math.PI; }
+
 /* ⭐ CALCULATE */
 calc.addEventListener("click", () => {
   const find = findValue.value;
-  let H = null, D = null, S = null, A = null;
 
   function get(v) {
-    const i = document.getElementById("input_" + v);
-    if (!i) return null;
-    const val = parseFloat(i.value);
+    const input = document.getElementById("input_" + v);
+    if (!input) return null;
+    const val = parseFloat(input.value);
     if (isNaN(val)) return null;
 
-    if (v === "angle") return val;
+    if (v === "angle") return val; 
 
     const unit = document.getElementById("unit_" + v).value;
     return toMeters[unit](val);
   }
 
-  H = get("height");
-  D = get("distance");
-  S = get("slant");
-  A = get("angle");
-
-  function degToRad(x) { return (x * Math.PI) / 180; }
-  function radToDeg(x) { return (x * 180) / Math.PI; }
+  const H = get("height");
+  const D = get("distance");
+  const S = get("slant");
+  const A = get("angle");
 
   let result = null;
   let steps = "";
 
-  /* ⭐ FIND HEIGHT */
+  /* ⭐ FIND HEIGHT (H) */
   if (find === "height") {
     if (D != null && A != null) {
       result = D * Math.tan(degToRad(A));
-      steps = `H = D × tan(θ)`;
+      steps = `H = D × tan(θ)\nH = ${D} × tan(${A})`;
     }
-    if (S != null && D != null) {
+    else if (S != null && A != null) {
+      result = S * Math.sin(degToRad(A));
+      steps = `H = S × sin(θ)\nH = ${S} × sin(${A})`;
+    }
+    else if (S != null && D != null) {
       result = Math.sqrt(S*S - D*D);
       steps = `H = √(S² - D²)`;
     }
   }
 
-  /* ⭐ FIND DISTANCE */
+  /* ⭐ FIND DISTANCE (D) */
   if (find === "distance") {
     if (H != null && A != null) {
       result = H / Math.tan(degToRad(A));
       steps = `D = H / tan(θ)`;
     }
-    if (S != null && H != null) {
+    else if (S != null && A != null) {
+      result = S * Math.cos(degToRad(A));
+      steps = `D = S × cos(θ)`;
+    }
+    else if (S != null && H != null) {
       result = Math.sqrt(S*S - H*H);
       steps = `D = √(S² - H²)`;
     }
   }
 
-  /* ⭐ FIND SLANT */
+  /* ⭐ FIND SLANT (S) */
   if (find === "slant") {
     if (H != null && D != null) {
       result = Math.sqrt(H*H + D*D);
       steps = `S = √(H² + D²)`;
     }
+    else if (H != null && A != null) {
+      result = H / Math.sin(degToRad(A));
+      steps = `S = H / sin(θ)`;
+    }
+    else if (D != null && A != null) {
+      result = D / Math.cos(degToRad(A));
+      steps = `S = D / cos(θ)`;
+    }
   }
 
-  /* ⭐ FIND ANGLE */
+  /* ⭐ FIND ANGLE (θ) */
   if (find === "angle") {
     if (H != null && D != null) {
       result = radToDeg(Math.atan(H / D));
-      steps = `θ = arctan(H / D)`;
+      steps = `θ = arctan(H/D)`;
+    }
+    else if (H != null && S != null) {
+      result = radToDeg(Math.asin(H / S));
+      steps = `θ = arcsin(H/S)`;
+    }
+    else if (D != null && S != null) {
+      result = radToDeg(Math.acos(D / S));
+      steps = `θ = arccos(D/S)`;
     }
   }
 
@@ -155,17 +179,25 @@ calc.addEventListener("click", () => {
   let outputUnit = "m";
 
   if (find !== "angle") {
-    const unitSelector = document.getElementById("unit_" + find);
-    if (unitSelector) {
-      outputUnit = unitSelector.value;
+    const unitDropdown = document.getElementById("unit_" + find);
+    if (unitDropdown) {
+      outputUnit = unitDropdown.value;
       result = fromMeters[outputUnit](result);
     }
   }
 
-  document.getElementById("result-card").style.display = "block";
-  document.getElementById("result").textContent =
+  resultCard.style.display = "block";
+  result.textContent =
     `${find.toUpperCase()} = ${result.toFixed(2)} ${find === "angle" ? "°" : outputUnit}`;
-  document.getElementById("steps").textContent = steps;
+
+  stepsDiv.textContent = steps;
+});
+
+/* ⭐ TOGGLE STEPS */
+toggleSteps.addEventListener("click", () => {
+  steps.classList.toggle("hidden");
+  toggleSteps.textContent =
+    steps.classList.contains("hidden") ? "Show Steps" : "Hide Steps";
 });
 
 /* ⭐ CLEAR */
