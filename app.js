@@ -31,7 +31,7 @@ const fromMeters = {
   in: v => v / 0.0254
 };
 
-/* ⭐ Create dynamic input fields */
+/* ⭐ DYNAMIC INPUTS */
 function updateInputs() {
   const k1 = known1.value;
   const k2 = known2.value;
@@ -50,16 +50,16 @@ function updateInputs() {
     angle: "Angle θ"
   };
 
-  [k1, k2].forEach(val => {
-    let html = `<div class="row"><label>${labels[val]}</label>`;
+  [k1, k2].forEach(v => {
+    let html = `<div class="row"><label>${labels[v]}</label>`;
 
-    if (val === "angle") {
-      html += `<input id="input_${val}" type="number" placeholder="Enter ${labels[val]}" step="any">`;
+    if (v === "angle") {
+      html += `<input id="input_${v}" type="number" placeholder="Enter ${labels[v]}">`;
     } else {
       html += `
-        <input id="input_${val}" type="number" step="any" placeholder="Enter ${labels[val]}">
-        <select id="unit_${val}" class="unit">
-          <option value="m">m</option>
+        <input id="input_${v}" type="number" step="any" placeholder="Enter ${labels[v]}">
+        <select id="unit_${v}" class="unit">
+          <option value="m" selected>m</option>
           <option value="cm">cm</option>
           <option value="dm">dm</option>
           <option value="km">km</option>
@@ -84,15 +84,15 @@ calc.addEventListener("click", () => {
   let H = null, D = null, S = null, A = null;
 
   function get(v) {
-    const input = document.getElementById("input_" + v);
-    if (!input) return null;
-    const value = parseFloat(input.value);
-    if (isNaN(value)) return null;
+    const i = document.getElementById("input_" + v);
+    if (!i) return null;
+    const val = parseFloat(i.value);
+    if (isNaN(val)) return null;
 
-    if (v === "angle") return value;
+    if (v === "angle") return val;
 
     const unit = document.getElementById("unit_" + v).value;
-    return toMeters[unit](value);
+    return toMeters[unit](val);
   }
 
   H = get("height");
@@ -130,7 +130,7 @@ calc.addEventListener("click", () => {
     }
   }
 
-  /* ⭐ FIND SLANT DISTANCE */
+  /* ⭐ FIND SLANT */
   if (find === "slant") {
     if (H != null && D != null) {
       result = Math.sqrt(H*H + D*D);
@@ -141,7 +141,7 @@ calc.addEventListener("click", () => {
   /* ⭐ FIND ANGLE */
   if (find === "angle") {
     if (H != null && D != null) {
-      result = radToDeg(Math.atan(H/D));
+      result = radToDeg(Math.atan(H / D));
       steps = `θ = arctan(H / D)`;
     }
   }
@@ -151,19 +151,24 @@ calc.addEventListener("click", () => {
     return;
   }
 
-  /* ⭐ Output in the SAME UNIT as the value being solved */
+  /* ⭐ Convert output to correct unit */
   let outputUnit = "m";
+
   if (find !== "angle") {
-    outputUnit = document.querySelector(`#unit_${find}`)?.value || "m";
-    result = fromMeters[outputUnit](result);
+    const unitSelector = document.getElementById("unit_" + find);
+    if (unitSelector) {
+      outputUnit = unitSelector.value;
+      result = fromMeters[outputUnit](result);
+    }
   }
 
-  resultCard.style.display = "block";
-  result.textContent = `${find.toUpperCase()} = ${result.toFixed(2)} ${find === "angle" ? "°" : outputUnit}`;
-  stepsDiv.textContent = steps;
+  document.getElementById("result-card").style.display = "block";
+  document.getElementById("result").textContent =
+    `${find.toUpperCase()} = ${result.toFixed(2)} ${find === "angle" ? "°" : outputUnit}`;
+  document.getElementById("steps").textContent = steps;
 });
 
 /* ⭐ CLEAR */
 clear.addEventListener("click", () => {
-  resultCard.style.display = "none";
+  document.getElementById("result-card").style.display = "none";
 });
