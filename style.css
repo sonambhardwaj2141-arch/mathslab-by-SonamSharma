@@ -141,7 +141,7 @@ select.unit {
   font-weight: bold;
 }
 
-/* Steps box */
+/* Steps box (BEIGE background) */
 .steps {
   background: #f3e8d7;
   padding: 12px;
@@ -149,6 +149,7 @@ select.unit {
   margin-top: 12px;
   font-size: 15px;
   white-space: pre-line;
+  border: 1px solid #d6c4af;
 }
 
 /* hidden class (for toggling steps) */
