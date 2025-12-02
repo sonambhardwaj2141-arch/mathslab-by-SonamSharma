@@ -26,7 +26,7 @@
       <button id="startBtn" class="cta">Start TrignoTool</button>
     </header>
 
-    <!-- ⭐ GALLERY (4 PER ROW) -->
+    <!-- ⭐ GALLERY -->
     <section class="gallery">
       <img src="./images/gallery_1.jpeg" loading="lazy" />
       <img src="./images/gallery_2.jpeg" loading="lazy" />
@@ -38,7 +38,7 @@
       <img src="./images/gallery_8.jpeg" loading="lazy" />
     </section>
 
-  </div> <!-- END HOME -->
+  </div>
 
 
   <!-- ⭐ TOOL PAGE -->
@@ -53,7 +53,7 @@
         <option value="height">Height (H)</option>
         <option value="distance">Horizontal Distance (D)</option>
         <option value="angle">Angle θ</option>
-        <option value="slant">Slant Distance</option>
+        <option value="slant">Slant Distance (S)</option>
       </select>
     </section>
 
@@ -67,7 +67,7 @@
           <option value="height">Height (H)</option>
           <option value="distance">Horizontal Distance (D)</option>
           <option value="angle">Angle θ</option>
-          <option value="slant">Slant Distance</option>
+          <option value="slant">Slant Distance (S)</option>
         </select>
       </div>
 
@@ -77,7 +77,7 @@
           <option value="height">Height (H)</option>
           <option value="distance">Horizontal Distance (D)</option>
           <option value="angle">Angle θ</option>
-          <option value="slant">Slant Distance</option>
+          <option value="slant">Slant Distance (S)</option>
         </select>
       </div>
     </section>
@@ -91,11 +91,14 @@
       <button id="clear" class="ghost">Clear</button>
     </section>
 
-    <!-- RESULT -->
+    <!-- ⭐ RESULT -->
     <section class="card" id="result-card" style="display:none;">
       <h2>Result</h2>
       <div id="result"></div>
-      <pre id="steps" class="steps"></pre>
+
+      <button id="toggleSteps" class="ghost">Show Steps</button>
+
+      <pre id="steps" class="steps hidden"></pre>
     </section>
 
   </main>
