@@ -1,157 +1,152 @@
-function $(id) {
-  return document.querySelector(id);
-}
+// HOME → TOOL
+document.getElementById("startBtn").addEventListener("click", () => {
 
-const tool = $("#tool");
-const startBtn = $("#startBtn");
-const findValue = $("#findValue");
-const known1 = $("#known1");
-const known2 = $("#known2");
-const inputsArea = $("#inputsArea");
-const resultCard = $("#result-card");
-const resultDiv = $("#result");
-const stepsDiv = $("#steps");
+  // Hide Home Page
+  document.getElementById("home").style.display = "none";
 
+  // Show Tool
+  document.getElementById("tool").classList.remove("hidden");
 
-// ⭐ START ⇄ HOME BUTTON FIXED
-startBtn.addEventListener("click", () => {
-  if (tool.classList.contains("hidden")) {
-    tool.classList.remove("hidden");
-    startBtn.textContent = "Home";
-    window.scrollTo(0, 0);
-  } else {
-    tool.classList.add("hidden");
-    startBtn.textContent = "Start TrignoTool";
-    window.scrollTo(0, 0);
-  }
+  // Scroll
+  window.scrollTo({
+    top: document.getElementById("tool").offsetTop - 10,
+    behavior: "smooth"
+  });
 });
 
 
-// ⭐ UPDATE INPUT FIELDS BASED ON SELECTION
-function updateInputs() {
+// TOOL → HOME
+document.getElementById("homeBtn").addEventListener("click", () => {
+
+  document.getElementById("tool").classList.add("hidden");
+  document.getElementById("home").style.display = "block";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+
+// =======================
+// DYNAMIC INPUT FIELDS
+// =======================
+function updateInputFields() {
+  const known1 = document.getElementById("known1").value;
+  const known2 = document.getElementById("known2").value;
+
+  const inputsArea = document.getElementById("inputsArea");
   inputsArea.innerHTML = "";
 
-  const k1 = known1.value;
-  const k2 = known2.value;
-  const target = findValue.value;
+  if (known1 === known2) {
+    inputsArea.innerHTML = `<p style="color:red;">Select two DIFFERENT values.</p>`;
+    return;
+  }
 
-  if (k1 === k2 || k1 === target || k2 === target) return;
+  let fields = [known1, known2];
 
-  const labels = {
-    height: "Height (H)",
-    distance: "Horizontal Distance (D)",
-    angle: "Angle θ (degrees)",
-    hyp: "Hypotenuse"
-  };
+  fields.forEach(v => {
+    let label = "";
+    if (v === "height") label = "Height (H)";
+    if (v === "distance") label = "Horizontal Distance (D)";
+    if (v === "angle") label = "Angle θ (degrees)";
+    if (v === "hyp") label = "Hypotenuse";
 
-  [k1, k2].forEach((val) => {
-    const row = document.createElement("div");
-    row.className = "row";
-    row.innerHTML = `
-      <label>${labels[val]}</label>
-      <input type="number" step="any" id="${val}Input" placeholder="Enter ${labels[val]}">
+    inputsArea.innerHTML += `
+      <div class="row">
+        <label>${label}</label>
+        <input type="number" id="input_${v}" step="any" placeholder="Enter ${label}">
+      </div>
     `;
-    inputsArea.appendChild(row);
   });
 }
 
-known1.addEventListener("change", updateInputs);
-known2.addEventListener("change", updateInputs);
-findValue.addEventListener("change", updateInputs);
+document.getElementById("known1").addEventListener("change", updateInputFields);
+document.getElementById("known2").addEventListener("change", updateInputFields);
+updateInputFields();
 
 
-// ⭐ CALCULATION SECTION
-$("#calc").addEventListener("click", () => {
-  const target = findValue.value;
-  const k1 = known1.value;
-  const k2 = known2.value;
+// =======================
+// MAIN CALCULATION LOGIC
+// =======================
+document.getElementById("calc").addEventListener("click", () => {
 
-  if (k1 === k2 || k1 === target || k2 === target) {
-    alert("Invalid selection. Please choose two different known values.");
+  const find = document.getElementById("findValue").value;
+  const known1 = document.getElementById("known1").value;
+  const known2 = document.getElementById("known2").value;
+
+  if (known1 === known2) {
+    alert("Please select two DIFFERENT known values.");
     return;
   }
 
-  let H = parseFloat($("#heightInput")?.value);
-  let D = parseFloat($("#distanceInput")?.value);
-  let A = parseFloat($("#angleInput")?.value);
-  let Hyp = parseFloat($("#hypInput")?.value);
+  let v1 = parseFloat(document.getElementById("input_" + known1)?.value);
+  let v2 = parseFloat(document.getElementById("input_" + known2)?.value);
 
-  stepsDiv.textContent = "";
-  resultDiv.textContent = "";
-
-  function rad(x) { return (x * Math.PI) / 180; }
-  function deg(x) { return (x * 180) / Math.PI; }
-
-
-  // ⭐ ALL VALID TRIGONOMETRIC COMBINATIONS
-
-  // HEIGHT + DISTANCE → ANGLE
-  if (target === "angle" && H && D) {
-    let theta = deg(Math.atan(H / D));
-    resultDiv.textContent = `Angle θ = ${theta.toFixed(2)}°`;
-    stepsDiv.textContent = `tan(θ) = H/D\nθ = arctan(${H}/${D})\nθ = ${theta.toFixed(2)}°`;
-  }
-
-  // HEIGHT + ANGLE → DISTANCE
-  else if (target === "distance" && H && A) {
-    let dist = H / Math.tan(rad(A));
-    resultDiv.textContent = `Horizontal Distance = ${dist.toFixed(2)} units`;
-    stepsDiv.textContent = `D = H / tan(${A}°)\nD = ${dist.toFixed(2)}`;
-  }
-
-  // DISTANCE + ANGLE → HEIGHT
-  else if (target === "height" && D && A) {
-    let h = D * Math.tan(rad(A));
-    resultDiv.textContent = `Height = ${h.toFixed(2)} units`;
-    stepsDiv.textContent = `H = D × tan(${A}°)\nH = ${h.toFixed(2)}`;
-  }
-
-  // HEIGHT + DISTANCE → HYPOTENUSE
-  else if (target === "hyp" && H && D) {
-    let hyp = Math.sqrt(H * H + D * D);
-    resultDiv.textContent = `Hypotenuse = ${hyp.toFixed(2)} units`;
-    stepsDiv.textContent = `Hyp = √(H² + D²)\nHyp = ${hyp.toFixed(2)}`;
-  }
-
-  // HEIGHT + HYP → DISTANCE
-  else if (target === "distance" && H && Hyp) {
-    let d2 = Math.sqrt(Hyp * Hyp - H * H);
-    resultDiv.textContent = `Horizontal Distance = ${d2.toFixed(2)} units`;
-    stepsDiv.textContent = `D = √(Hyp² - H²)\nD = ${d2.toFixed(2)}`;
-  }
-
-  // DISTANCE + HYP → HEIGHT
-  else if (target === "height" && D && Hyp) {
-    let h2 = Math.sqrt(Hyp * Hyp - D * D);
-    resultDiv.textContent = `Height = ${h2.toFixed(2)} units`;
-    stepsDiv.textContent = `H = √(Hyp² - D²)\nH = ${h2.toFixed(2)}`;
-  }
-
-  // HYP + ANGLE → HEIGHT
-  else if (target === "height" && Hyp && A) {
-    let h = Hyp * Math.sin(rad(A));
-    resultDiv.textContent = `Height = ${h.toFixed(2)} units`;
-    stepsDiv.textContent = `H = Hyp × sin(${A}°)\nH = ${h.toFixed(2)}`;
-  }
-
-  // HYP + ANGLE → DISTANCE
-  else if (target === "distance" && Hyp && A) {
-    let d = Hyp * Math.cos(rad(A));
-    resultDiv.textContent = `Horizontal Distance = ${d.toFixed(2)} units`;
-    stepsDiv.textContent = `D = Hyp × cos(${A}°)\nD = ${d.toFixed(2)}`;
-  }
-
-  else {
-    alert("Please enter correct numeric values.");
+  if (isNaN(v1) || isNaN(v2)) {
+    alert("Enter both values.");
     return;
   }
 
-  resultCard.style.display = "block";
+  let H = null, D = null, A = null, Hyp = null;
+
+  if (known1 === "height") H = v1;
+  if (known1 === "distance") D = v1;
+  if (known1 === "angle") A = v1;
+  if (known1 === "hyp") Hyp = v1;
+
+  if (known2 === "height") H = v2;
+  if (known2 === "distance") D = v2;
+  if (known2 === "angle") A = v2;
+  if (known2 === "hyp") Hyp = v2;
+
+  function degToRad(x) { return (x*Math.PI)/180; }
+  function radToDeg(x) { return (x*180)/Math.PI; }
+
+  let result = null, steps = "";
+
+  // HEIGHT
+  if (find === "height") {
+    if (A != null && D != null) {
+      result = D * Math.tan(degToRad(A));
+      steps = `H = D × tan(θ)\nH = ${D} × tan(${A})`;
+    }
+  }
+
+  // DISTANCE
+  if (find === "distance") {
+    if (A != null && H != null) {
+      result = H / Math.tan(degToRad(A));
+      steps = `D = H / tan(θ)\nD = ${H} / tan(${A})`;
+    }
+  }
+
+  // ANGLE
+  if (find === "angle") {
+    if (H != null && D != null) {
+      result = radToDeg(Math.atan(H / D));
+      steps = `θ = arctan(H/D)\nθ = arctan(${H}/${D})`;
+    }
+  }
+
+  // HYPOTENUSE
+  if (find === "hyp") {
+    if (H != null && D != null) {
+      result = Math.sqrt(H * H + D * D);
+      steps = `Hyp = √(H² + D²)\nHyp = √(${H}² + ${D}²)`;
+    }
+  }
+
+  if (result == null) {
+    alert("Invalid input combination.");
+    return;
+  }
+
+  document.getElementById("result-card").style.display = "block";
+  document.getElementById("result").innerHTML = 
+    `${find.toUpperCase()} = ${result.toFixed(2)}`;
+  document.getElementById("steps").innerText = steps;
 });
 
 
-// ⭐ CLEAR BUTTON
-$("#clear").addEventListener("click", () => {
-  inputsArea.innerHTML = "";
-  resultCard.style.display = "none";
+// CLEAR BUTTON
+document.getElementById("clear").addEventListener("click", () => {
+  document.getElementById("result-card").style.display = "none";
 });
