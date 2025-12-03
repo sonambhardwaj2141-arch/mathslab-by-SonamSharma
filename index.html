@@ -8,6 +8,8 @@
 </head>
 
 <body>
+  <button id="darkModeToggle" class="dark-btn">🌙 Dark Mode</button>
+
   <header class="hero">
     <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
     <p class="subtitle">
@@ -80,6 +82,17 @@
       <div id="result"></div>
       <button id="toggleSteps">Show Steps</button>
       <pre id="steps" class="steps hidden"></pre>
+
+      <h3>Triangle Diagram</h3>
+      <svg id="diagram" width="300" height="200">
+        <line id="line-base" x1="20" y1="180" x2="280" y2="180" stroke="blue" stroke-width="3"></line>
+        <line id="line-height" x1="20" y1="180" x2="20" y2="50" stroke="green" stroke-width="3"></line>
+        <line id="line-slant" x1="20" y1="50" x2="280" y2="180" stroke="red" stroke-width="3"></line>
+
+        <text id="label-base" x="130" y="195" font-size="14">D</text>
+        <text id="label-height" x="30" y="120" font-size="14">H</text>
+        <text id="label-slant" x="150" y="110" font-size="14">S</text>
+      </svg>
     </section>
 
   </main>
