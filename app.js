@@ -1,12 +1,11 @@
-// SHORTHAND SELECTOR
-function $(id) { return document.querySelector(id); }
+function $(q) { return document.querySelector(q); }
 
-// DARK MODE TOGGLE
+/* DARK MODE */
 $("#darkModeToggle").addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-// PAGE TOGGLE
+/* PAGE TOGGLE */
 const startBtn = $("#startBtn");
 const tool = $("#tool");
 const gallery = $(".gallery");
@@ -26,14 +25,12 @@ startBtn.addEventListener("click", () => {
   }
 });
 
-// -------------------------
-// FIELD TEMPLATES
-// -------------------------
+/* INPUT FIELD TEMPLATES */
 const fields = {
   height: `
     <div class="rowBlock">
       <label>Height (H)</label>
-      <input id="heightVal" type="number">
+      <input id="heightVal" type="number" />
       <select id="heightUnit">
         <option value="m">m</option><option value="cm">cm</option>
         <option value="dm">dm</option><option value="km">km</option>
@@ -44,7 +41,7 @@ const fields = {
   distance: `
     <div class="rowBlock">
       <label>Horizontal Distance (D)</label>
-      <input id="distanceVal" type="number">
+      <input id="distanceVal" type="number" />
       <select id="distanceUnit">
         <option value="m">m</option><option value="cm">cm</option>
         <option value="dm">dm</option><option value="km">km</option>
@@ -55,7 +52,7 @@ const fields = {
   slant: `
     <div class="rowBlock">
       <label>Slant Distance (S)</label>
-      <input id="slantVal" type="number">
+      <input id="slantVal" type="number" />
       <select id="slantUnit">
         <option value="m">m</option><option value="cm">cm</option>
         <option value="dm">dm</option><option value="km">km</option>
@@ -66,33 +63,30 @@ const fields = {
   angle: `
     <div class="rowBlock">
       <label>Angle θ</label>
-      <input id="angleVal" type="number">
-      <span class="angleUnit">degrees</span>
+      <input id="angleVal" type="number" />
+      <span style="margin-top:6px;">degrees</span>
     </div>
   `
 };
 
-// UPDATE INPUT AREA
-function updateInputFields() {
-  const a = $("#known1").value;
-  const b = $("#known2").value;
+function updateInputs() {
+  let a = $("#known1").value;
+  let b = $("#known2").value;
 
   if (a === b) {
     $("#inputsArea").innerHTML =
-      `<p style="color:red;">❌ Please select two different known values.</p>`;
+      `<p style="color:red;">❌ Please choose two different known values.</p>`;
     return;
   }
 
   $("#inputsArea").innerHTML = fields[a] + fields[b];
 }
 
-$("#known1").addEventListener("change", updateInputFields);
-$("#known2").addEventListener("change", updateInputFields);
-updateInputFields();
+$("#known1").addEventListener("change", updateInputs);
+$("#known2").addEventListener("change", updateInputs);
+updateInputs();
 
-// -------------------------
-// CALCULATION
-// -------------------------
+/* FORMULAS */
 function calcHeight(D, S, A) {
   if (D != null && A != null) {
     const r = D * Math.tan(A * Math.PI / 180);
@@ -104,7 +98,7 @@ H = ${r.toFixed(2)}`
     };
   }
   if (S != null && D != null) {
-    const r = Math.sqrt(S * S - D * D);
+    const r = Math.sqrt(S*S - D*D);
     return {
       ans: r,
       steps: `H = √(S² - D²)
@@ -114,40 +108,57 @@ H = ${r.toFixed(2)}`
   }
 }
 
+/* TRIANGLE DRAWING */
 function updateDiagram(H, D, S) {
-  $("#line-base").setAttribute("x2", 20 + (D * 3));
-  $("#line-slant").setAttribute("x2", 20 + (D * 3));
-  $("#line-slant").setAttribute("y2", 180 - (H * 3));
-  $("#line-height").setAttribute("y2", 180 - (H * 3));
+
+  if (!H || !D || !S) return;
+
+  let scaleH = 120 / H;
+  let scaleD = 240 / D;
+  let scale = Math.min(scaleH, scaleD);
+
+  let Hpx = H * scale;
+  let Dpx = D * scale;
+
+  $("#baseLine").setAttribute("x2", 40 + Dpx);
+  $("#heightLine").setAttribute("y2", 180 - Hpx);
+  $("#slantLine").setAttribute("x2", 40 + Dpx);
+  $("#slantLine").setAttribute("y2", 180 - Hpx);
+
+  $("#labelH").setAttribute("y", 180 - Hpx/2);
+  $("#labelD").setAttribute("x", 40 + Dpx/2);
+  $("#labelS").setAttribute("x", 40 + Dpx/2);
+  $("#labelS").setAttribute("y", 180 - Hpx/2);
 }
 
+/* CALCULATE BUTTON */
 $("#calc").addEventListener("click", () => {
-  const find = $("#findValue").value;
+
+  let find = $("#findValue").value;
 
   let H = $("#heightVal") ? Number($("#heightVal").value) : null;
   let D = $("#distanceVal") ? Number($("#distanceVal").value) : null;
   let S = $("#slantVal") ? Number($("#slantVal").value) : null;
   let A = $("#angleVal") ? Number($("#angleVal").value) : null;
 
-  let r;
+  let result;
 
-  if (find === "height") r = calcHeight(D, S, A);
+  if (find === "height") result = calcHeight(D, S, A);
 
-  if (!r) {
-    alert("Invalid or missing input!");
+  if (!result) {
+    alert("Invalid inputs.");
     return;
   }
 
-  $("#result").innerHTML =
-    `${find.toUpperCase()} = ${r.ans.toFixed(2)} m`;
+  $("#result").innerHTML = `${find.toUpperCase()} = ${result.ans.toFixed(2)} m`;
 
-  $("#steps").textContent = r.steps;
+  $("#steps").textContent = result.steps;
   $("#result-card").style.display = "block";
 
-  updateDiagram(r.ans, D, S);
+  updateDiagram(result.ans, D, S);
 });
 
-// SHOW/HIDE STEPS
+/* STEPS TOGGLE */
 $("#toggleSteps").addEventListener("click", () => {
   $("#steps").classList.toggle("hidden");
 });
