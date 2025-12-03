@@ -1,153 +1,124 @@
-/* BASE */
+/* GENERAL */
 body {
   margin: 0;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "Inter", sans-serif;
   background: #f7f7f7;
   color: #222;
-  transition: background 0.3s, color 0.3s;
+  transition: 0.3s;
 }
 
 /* DARK MODE */
-body.dark {
-  background: #121212;
-  color: #f2f2f2;
-}
-body.dark .card {
-  background: #1f1f1f;
-}
-body.dark .hero {
-  filter: brightness(0.85);
-}
-body.dark .steps {
-  background: #333;
-  color: #f2f2f2;
-}
+body.dark { background:#121212; color:#eee; }
+body.dark .card { background:#1e1e1e; }
+body.dark .steps { background:#333; color:white; }
+body.dark .hero { filter:brightness(0.85); }
 
 /* DARK MODE BUTTON */
 .dark-btn {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: none;
-  background: #333;
-  color: #fff;
-  cursor: pointer;
-  z-index: 10;
+  position:fixed;
+  top:12px; right:12px;
+  padding:6px 14px;
+  border:none;
+  border-radius:999px;
+  background:#333;
+  color:#fff;
+  cursor:pointer;
+  z-index:20;
 }
 
-/* HERO */
+/* UPDATE POPUP */
+.update-banner {
+  position:fixed;
+  bottom:12px;
+  left:50%; transform:translateX(-50%);
+  background:#222;
+  color:#fff;
+  padding:8px 14px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  z-index:30;
+}
+.update-banner button {
+  padding:4px 10px;
+  border:none; border-radius:999px;
+  background:#0b57ff;
+  color:white;
+  cursor:pointer;
+}
+.hidden { display:none; }
+
+/* HEADER */
 .hero {
-  background: linear-gradient(90deg, #ff8800, #32cd32);
-  padding: 32px 16px 24px;
-  text-align: center;
-  color: #fff;
-}
-.hero h1 {
-  margin: 0 0 8px;
-}
-.subtitle {
-  margin: 4px 0 10px;
-}
-.byline {
-  margin: 0;
-  font-size: 14px;
-}
-
-/* BUTTONS */
-.cta {
-  padding: 10px 24px;
-  border-radius: 10px;
-  border: none;
-  background: #0b57ff;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-}
-.small-btn {
-  margin-top: 8px;
-  margin-right: 8px;
-  font-size: 14px;
-  padding: 8px 18px;
-}
-.home-btn {
-  margin: 16px 20px 0;
-}
-.ghost {
-  background: #e0e0e0;
-  color: #222;
+  background:linear-gradient(90deg,#ff8800,#32cd32);
+  padding:32px 16px;
+  text-align:center;
+  color:white;
 }
 
 /* GALLERY */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  padding: 20px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  padding:20px;
 }
 .gallery img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
+  width:100%; height:180px;
+  object-fit:cover;
+  border-radius:12px;
 }
 
-/* CARDS */
+/* CARD */
 .card {
-  background: #fff;
-  margin: 16px 20px;
-  padding: 20px;
-  border-radius: 14px;
+  background:white;
+  margin:16px 20px;
+  padding:20px;
+  border-radius:14px;
 }
 
-/* INPUT ROWS */
-.input-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+/* BUTTONS */
+.cta {
+  padding:10px 24px;
+  border:none;
+  border-radius:10px;
+  background:#0b57ff;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
 }
-.input-row label {
-  font-weight: 600;
+.small-btn { padding:8px 18px; font-size:14px; margin:6px 6px 0 0; }
+.ghost { background:#e0e0e0; color:#222; }
+.home-btn { margin:16px 20px 0; }
+
+/* INPUT FIELDS */
+.input-row, .rowBlock {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:18px;
+}
+.rowBlock input, .rowBlock select,
+.input-row select {
+  max-width:260px;
+  padding:8px 10px;
+  border:1px solid #bbb;
+  border-radius:8px;
 }
 
-.input-row select,
-.rowBlock input,
-.rowBlock select {
-  max-width: 260px;
-  padding: 8px 10px;
-  border: 1px solid #bbb;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
-/* DYNAMIC INPUTS */
-.rowBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 18px;
-}
-.rowBlock label {
-  font-weight: 600;
-}
-
-/* RESULT + STEPS */
-#result {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
+/* STEPS BOX */
 .steps {
-  background: #f3e8d7;
-  padding: 10px;
-  border-radius: 8px;
-  white-space: pre-line;
-  margin-top: 10px;
+  background:#f3e8d7;
+  white-space:pre-line;
+  padding:10px;
+  border-radius:8px;
+  margin-top:10px;
 }
 
-/* UTILITIES */
-.hidden {
-  display: none;
+/* RESULT TEXT */
+#result {
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:10px;
 }
