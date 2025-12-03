@@ -8,38 +8,32 @@
 </head>
 
 <body>
-
-  <!-- HOME HEADER -->
   <header class="hero">
     <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
-
     <p class="subtitle">
       Height • Horizontal Distance • Slant Distance • Angle θ — find any one value using the other two
     </p>
-
     <p class="byline">
       Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose, Ludhiana
     </p>
-
     <button id="startBtn" class="cta">Start TrignoTool</button>
   </header>
 
-  <!-- IMAGE GALLERY -->
+  <!-- GALLERY SECTION -->
   <section class="gallery">
-    <img src="./images/gallery_1.jpeg" loading="lazy" />
-    <img src="./images/gallery_2.jpeg" loading="lazy" />
-    <img src="./images/gallery_3.jpeg" loading="lazy" />
-    <img src="./images/gallery_4.jpeg" loading="lazy" />
-    <img src="./images/gallery_5.jpeg" loading="lazy" />
-    <img src="./images/gallery_6.jpeg" loading="lazy" />
-    <img src="./images/gallery_7.jpeg" loading="lazy" />
-    <img src="./images/gallery_8.jpeg" loading="lazy" />
+    <img src="./images/gallery_1.jpeg" loading="lazy">
+    <img src="./images/gallery_2.jpeg" loading="lazy">
+    <img src="./images/gallery_3.jpeg" loading="lazy">
+    <img src="./images/gallery_4.jpeg" loading="lazy">
+    <img src="./images/gallery_5.jpeg" loading="lazy">
+    <img src="./images/gallery_6.jpeg" loading="lazy">
+    <img src="./images/gallery_7.jpeg" loading="lazy">
+    <img src="./images/gallery_8.jpeg" loading="lazy">
   </section>
 
-  <!-- TRIGNO TOOL PAGE -->
+  <!-- CALCULATOR SECTION -->
   <main id="tool" class="hidden">
 
-    <!-- STEP 1 -->
     <section class="card">
       <h2>Which value do you want to find?</h2>
       <select id="findValue">
@@ -50,7 +44,6 @@
       </select>
     </section>
 
-    <!-- STEP 2 -->
     <section class="card">
       <h2>Which two values do you know?</h2>
 
@@ -75,19 +68,17 @@
       </div>
     </section>
 
-    <!-- STEP 3 -->
     <section class="card">
       <h2>Enter the two known values</h2>
       <div id="inputsArea"></div>
-
       <button id="calc">Calculate</button>
       <button id="clear" class="ghost">Clear</button>
     </section>
 
-    <!-- RESULT -->
     <section class="card" id="result-card" style="display:none;">
       <h2>Result</h2>
       <div id="result"></div>
+      <button id="toggleSteps">Show Steps</button>
       <pre id="steps" class="steps hidden"></pre>
     </section>
 
