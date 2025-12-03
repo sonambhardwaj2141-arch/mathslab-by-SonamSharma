@@ -2,120 +2,114 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MathsLab by Sonam — Smart TrignoTool</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <!-- DARK MODE BUTTON -->
-  <button id="darkModeToggle" class="dark-btn">🌙 Dark Mode</button>
 
-  <!-- HEADER / HOME PAGE -->
-  <header class="hero">
-    <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
-    <p class="subtitle">
-      Height • Horizontal Distance • Slant Distance • Angle θ — find any one value using the other two
-    </p>
-    <p class="byline">
-      Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose, Ludhiana
-    </p>
-    <button id="startBtn" class="cta">Start TrignoTool</button>
-  </header>
+<header class="hero">
+  <h1>MathsLab by Sonam — Smart TrignoTool</h1>
+  <p>Height • Horizontal Distance • Slant Distance • Angle θ — find any one using the other two</p>
 
-  <!-- GALLERY -->
-  <section class="gallery">
-    <img src="./images/gallery_1.jpeg" />
-    <img src="./images/gallery_2.jpeg" />
-    <img src="./images/gallery_3.jpeg" />
-    <img src="./images/gallery_4.jpeg" />
-    <img src="./images/gallery_5.jpeg" />
-    <img src="./images/gallery_6.jpeg" />
-    <img src="./images/gallery_7.jpeg" />
-    <img src="./images/gallery_8.jpeg" />
-  </section>
+  <button id="startBtn" class="cta">Start TrignoTool</button>
+  <button id="darkModeToggle" class="dark-toggle">🌙 Dark Mode</button>
+</header>
 
-  <!-- TOOL PAGE -->
-  <main id="tool" class="hidden">
+<!-- VIDEO SECTION -->
+<section class="video-section">
+  <h2>Practical Demonstration Video</h2>
 
-    <button id="homeBtn" class="cta home-btn">Home</button>
+  <video controls class="demo-video">
+    <source src="./videos/trigonometry_demo.mp4" type="video/mp4">
+    Your browser does not support video.
+  </video>
+</section>
 
-    <!-- STEP 1 -->
-    <section class="card">
-      <h2>Which value do you want to find?</h2>
-      <div class="input-row">
-        <select id="findValue">
-          <option value="height">Height (H)</option>
-          <option value="distance">Horizontal Distance (D)</option>
-          <option value="slant">Slant Distance (S)</option>
-          <option value="angle">Angle θ</option>
-        </select>
-      </div>
-    </section>
+<!-- GALLERY -->
+<section class="gallery">
+  <img src="./images/gallery_1.jpeg"/>
+  <img src="./images/gallery_2.jpeg"/>
+  <img src="./images/gallery_3.jpeg"/>
+  <img src="./images/gallery_4.jpeg"/>
+  <img src="./images/gallery_5.jpeg"/>
+  <img src="./images/gallery_6.jpeg"/>
+  <img src="./images/gallery_7.jpeg"/>
+  <img src="./images/gallery_8.jpeg"/>
+</section>
 
-    <!-- STEP 2 -->
-    <section class="card">
-      <h2>Which two values do you know?</h2>
+<main id="tool" class="hidden">
 
-      <div class="input-row">
-        <label>First known value</label>
-        <select id="known1">
-          <option value="height">Height (H)</option>
-          <option value="distance">Horizontal Distance (D)</option>
-          <option value="slant">Slant Distance (S)</option>
-          <option value="angle">Angle θ</option>
-        </select>
-      </div>
+<button id="homeBtn" class="cta" style="display:none;">Home</button>
 
-      <div class="input-row">
-        <label>Second known value</label>
-        <select id="known2">
-          <option value="height">Height (H)</option>
-          <option value="distance">Horizontal Distance (D)</option>
-          <option value="slant">Slant Distance (S)</option>
-          <option value="angle">Angle θ</option>
-        </select>
-      </div>
-    </section>
+<!-- FIND WHAT SECTION -->
+<section class="card">
+  <h2>Which value do you want to find?</h2>
+  <select id="findValue">
+    <option value="height">Height (H)</option>
+    <option value="distance">Horizontal Distance (D)</option>
+    <option value="slant">Slant Distance (S)</option>
+    <option value="angle">Angle (θ)</option>
+  </select>
+</section>
 
-    <!-- STEP 3 -->
-    <section class="card">
-      <h2>Enter the two known values</h2>
-      <div id="inputsArea"></div>
+<!-- KNOWN VALUES -->
+<section class="card">
+  <h2>Which two values do you know?</h2>
 
-      <button id="calc" class="cta small-btn">Calculate</button>
-      <button id="clear" class="ghost small-btn">Clear</button>
-    </section>
+  <label>First known value</label>
+  <select id="known1">
+    <option value="height">Height (H)</option>
+    <option value="distance">Horizontal Distance (D)</option>
+    <option value="slant">Slant Distance (S)</option>
+    <option value="angle">Angle (θ)</option>
+  </select>
 
-    <!-- RESULT + STEPS + DIAGRAM -->
-    <section class="card" id="result-card" style="display:none;">
-      <h2>Result</h2>
-      <div id="result"></div>
+  <label>Second known value</label>
+  <select id="known2">
+    <option value="height">Height (H)</option>
+    <option value="distance">Horizontal Distance (D)</option>
+    <option value="slant">Slant Distance (S)</option>
+    <option value="angle">Angle (θ)</option>
+  </select>
+</section>
 
-      <button id="toggleSteps" class="ghost small-btn">Show Steps</button>
-      <pre id="steps" class="steps hidden"></pre>
+<!-- INPUT SECTION -->
+<section class="card">
+  <h2>Enter the two known values</h2>
+  <div id="inputsArea"></div>
 
-      <h3>Triangle Diagram</h3>
-      <svg id="diagram" width="320" height="220" style="background:white; border-radius:10px">
-        <!-- Base D -->
-        <line id="baseLine" x1="40" y1="180" x2="280" y2="180" stroke="blue" stroke-width="4"></line>
-        <!-- Height H -->
-        <line id="heightLine" x1="40" y1="180" x2="40" y2="60" stroke="green" stroke-width="4"></line>
-        <!-- Slant S -->
-        <line id="slantLine" x1="40" y1="60" x2="280" y2="180" stroke="red" stroke-width="4"></line>
+  <button id="calc" class="cta-small">Calculate</button>
+  <button id="clear" class="ghost">Clear</button>
+</section>
 
-        <!-- Labels -->
-        <text id="labelH" x="10" y="120" font-size="16">H</text>
-        <text id="labelD" x="150" y="200" font-size="16">D</text>
-        <text id="labelS" x="160" y="110" font-size="16">S</text>
+<!-- RESULT SECTION -->
+<section class="card" id="result-card" style="display:none;">
+  <h2>Result</h2>
+  <div id="result"></div>
 
-        <!-- Right angle box -->
-        <rect id="angleBox" x="40" y="162" width="16" height="16" fill="none" stroke="black" stroke-width="2"></rect>
-      </svg>
-    </section>
+  <button id="toggleSteps" class="cta-small">Show Steps</button>
+  <pre id="steps" class="hidden"></pre>
 
-  </main>
+  <h3>Triangle Diagram</h3>
 
-  <script src="app.js"></script>
+  <svg id="diagram" width="320" height="220">
+    <line id="baseLine" x1="40" y1="180" x2="280" y2="180" stroke="blue" stroke-width="4"></line>
+    <line id="heightLine" x1="40" y1="180" x2="40" y2="60" stroke="green" stroke-width="4"></line>
+    <line id="slantLine" x1="40" y1="60" x2="280" y2="180" stroke="red" stroke-width="4"></line>
+
+    <text id="labelH" x="10" y="120">H</text>
+    <text id="labelD" x="150" y="200">D</text>
+    <text id="labelS" x="160" y="110">S</text>
+
+    <rect id="angleBox" x="40" y="158" width="18" height="18" stroke="black" fill="none"></rect>
+  </svg>
+
+</section>
+
+</main>
+
+<script src="app.js"></script>
 </body>
 </html>
