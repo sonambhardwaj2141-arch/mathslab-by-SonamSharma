@@ -1,341 +1,427 @@
-/* ⭐ START → TOOL */
-document.getElementById("startBtn").addEventListener("click", () => {
-  document.getElementById("home").style.display = "none";
-  document.getElementById("tool").classList.remove("hidden");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+// ===============================
+// Helper Shortcut
+// ===============================
+const $ = (q) => document.querySelector(q);
 
-/* ⭐ TOOL → HOME */
-document.getElementById("homeBtn").addEventListener("click", () => {
-  document.getElementById("tool").classList.add("hidden");
-  document.getElementById("home").style.display = "block";
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+const findValue = $("#findValue");
+const known1 = $("#known1");
+const known2 = $("#known2");
+const inputsArea = $("#inputsArea");
+const calcBtn = $("#calc");
+const clearBtn = $("#clear");
+const resultCard = $("#result-card");
+const resultDiv = $("#result");
+const stepsDiv = $("#steps");
 
-/* ⭐ GET ELEMENTS */
-const findValue   = document.getElementById("findValue");
-const known1      = document.getElementById("known1");
-const known2      = document.getElementById("known2");
-const inputsArea  = document.getElementById("inputsArea");
-const calc        = document.getElementById("calc");
-const clearBtn    = document.getElementById("clear");
-const resultCard  = document.getElementById("result-card");
-const result      = document.getElementById("result");
-const stepsDiv    = document.getElementById("steps");
-const toggleStepsBtn = document.getElementById("toggleSteps");
+// Toggle steps
+function toggleSteps() {
+  if (stepsDiv.classList.contains("hidden")) {
+    stepsDiv.classList.remove("hidden");
+    this.textContent = "Hide Steps";
+  } else {
+    stepsDiv.classList.add("hidden");
+    this.textContent = "Show Steps";
+  }
+}
 
-/* ⭐ UNIT CONVERSION */
+// ===============================
+// Unit Conversion
+// ===============================
 const toMeters = {
-  m:  v => v,
+  m: v => v,
   cm: v => v / 100,
   dm: v => v / 10,
   km: v => v * 1000,
   ft: v => v * 0.3048,
-  in: v => v * 0.0254
+  inch: v => v * 0.0254
 };
 
 const fromMeters = {
-  m:  v => v,
+  m: v => v,
   cm: v => v * 100,
   dm: v => v * 10,
   km: v => v / 1000,
   ft: v => v / 0.3048,
-  in: v => v / 0.0254
+  inch: v => v / 0.0254
 };
 
-/* ⭐ CREATE INPUT FIELDS BASED ON SELECTION */
+// Rounder
+const r2 = (x) => Number(x).toFixed(2);
+const r4 = (x) => Number(x).toFixed(4);
+
+// ===============================
+// Create Dynamic Input Fields
+// ===============================
 function updateInputs() {
   const k1 = known1.value;
   const k2 = known2.value;
 
-  inputsArea.innerHTML = "";
-
   if (k1 === k2) {
-    inputsArea.innerHTML = `<p style="color:red">Select two different values.</p>`;
+    inputsArea.innerHTML = `<p style="color:red;">Please select two DIFFERENT known values.</p>`;
     return;
   }
 
-  const labels = {
-    height:   "Height (H)",
-    distance: "Horizontal Distance (D)",
-    slant:    "Slant Distance (S)",
-    angle:    "Angle (θ)"
+  const fields = {
+    height: `
+      <label>Height (H)</label>
+      <input id="heightVal" type="number" step="any">
+      <select id="heightUnit" class="unit">
+        <option value="m">m</option>
+        <option value="cm">cm</option>
+        <option value="dm">dm</option>
+        <option value="km">km</option>
+        <option value="ft">ft</option>
+        <option value="inch">inch</option>
+      </select>
+    `,
+    distance: `
+      <label>Horizontal Distance (D)</label>
+      <input id="distanceVal" type="number" step="any">
+      <select id="distanceUnit" class="unit">
+        <option value="m">m</option>
+        <option value="cm">cm</option>
+        <option value="dm">dm</option>
+        <option value="km">km</option>
+        <option value="ft">ft</option>
+        <option value="inch">inch</option>
+      </select>
+    `,
+    slant: `
+      <label>Slant Distance (S)</label>
+      <input id="slantVal" type="number" step="any">
+      <select id="slantUnit" class="unit">
+        <option value="m">m</option>
+        <option value="cm">cm</option>
+        <option value="dm">dm</option>
+        <option value="km">km</option>
+        <option value="ft">ft</option>
+        <option value="inch">inch</option>
+      </select>
+    `,
+    angle: `
+      <label>Angle θ</label>
+      <input id="angleVal" type="number" step="any">
+      <span class="angleUnit">degrees</span>
+    `
   };
 
-  [k1, k2].forEach(v => {
-    let html = `<div class="row"><label>${labels[v]}</label>`;
-
-    if (v === "angle") {
-      html += `
-        <input id="input_${v}" type="number" placeholder="Enter ${labels[v]}">
-        <span class="angleUnit">degrees</span>
-      `;
-    } else {
-      html += `
-        <input id="input_${v}" type="number" step="any" placeholder="Enter ${labels[v]}">
-        <select id="unit_${v}" class="unit">
-          <option value="m" selected>m</option>
-          <option value="cm">cm</option>
-          <option value="dm">dm</option>
-          <option value="km">km</option>
-          <option value="ft">ft</option>
-          <option value="in">in</option>
-        </select>
-      `;
-    }
-
-    html += `</div>`;
-    inputsArea.innerHTML += html;
-  });
+  inputsArea.innerHTML = fields[k1] + fields[k2];
 }
 
 known1.addEventListener("change", updateInputs);
 known2.addEventListener("change", updateInputs);
+findValue.addEventListener("change", updateInputs);
 updateInputs();
 
-/* ⭐ TRIG HELPERS */
-function degToRad(x) { return x * Math.PI / 180; }
-function radToDeg(x) { return x * 180 / Math.PI; }
-function round2(x) { return Number(x.toFixed(2)); }
-
-/* ⭐ CALCULATE BUTTON */
-calc.addEventListener("click", () => {
+// ===============================
+// Main Calculator
+// ===============================
+calcBtn.addEventListener("click", () => {
   const find = findValue.value;
+  const k1 = known1.value;
+  const k2 = known2.value;
 
-  /* READ INPUTS */
-  function get(v) {
-    const input = document.getElementById("input_" + v);
-    if (!input) return null;
-
-    const val = parseFloat(input.value);
-    if (isNaN(val)) return null;
-
-    if (v === "angle") return val;
-
-    const unit = document.getElementById("unit_" + v).value;
-    return toMeters[unit](val);
-  }
-
-  const H = get("height");
-  const D = get("distance");
-  const S = get("slant");
-  const A = get("angle");
-
-  let resultValue = null;
-  let steps = "Step 1: Identify Given Values\n";
-
-  /* BUILD GIVEN VALUES FOR STEPS */
-  if (H != null) steps += `  Height (H) = ${round2(H)} m\n`;
-  if (D != null) steps += `  Horizontal Distance (D) = ${round2(D)} m\n`;
-  if (S != null) steps += `  Slant Distance (S) = ${round2(S)} m\n`;
-  if (A != null) steps += `  Angle (θ) = ${round2(A)}°\n`;
-
-  steps += `\nStep 2: Use the trigonometric relation\n`;
-
-  /* ⭐ FORMULA SELECTION & CALCULATION */
-  if (find === "height") {
-    if (D != null && A != null) {
-      steps += `  tan(θ) = H / D\n`;
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  H = D × tan(θ)\n`;
-      steps += `  H = ${round2(D)} × tan(${round2(A)}°)\n`;
-
-      const trig = round2(Math.tan(degToRad(A)));
-      steps += `\nStep 4: Calculate tan(${round2(A)}°)\n`;
-      steps += `  tan(${round2(A)}°) = ${trig}\n`;
-
-      resultValue = D * Math.tan(degToRad(A));
-      steps += `\nStep 5: Final Calculation\n`;
-      steps += `  H = ${round2(D)} × ${trig} = ${round2(resultValue)} m\n`;
-    }
-
-    else if (S != null && A != null) {
-      steps += `  sin(θ) = H / S\n`;
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  H = S × sin(θ)\n`;
-      steps += `  H = ${round2(S)} × sin(${round2(A)}°)\n`;
-
-      const trig = round2(Math.sin(degToRad(A)));
-      steps += `\nStep 4: Calculate sin(${round2(A)}°)\n`;
-      steps += `  sin(${round2(A)}°) = ${trig}\n`;
-
-      resultValue = S * Math.sin(degToRad(A));
-      steps += `\nStep 5: Final Calculation\n`;
-      steps += `  H = ${round2(S)} × ${trig} = ${round2(resultValue)} m\n`;
-    }
-
-    else if (S != null && D != null) {
-      steps += `  S² = H² + D² → H = √(S² − D²)\n`;
-      resultValue = Math.sqrt(S*S - D*D);
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  H = √(${round2(S)}² − ${round2(D)}²)\n`;
-
-      steps += `\nStep 4: Final Calculation\n`;
-      steps += `  H = ${round2(resultValue)} m\n`;
-    }
-  }
-
-  /* ⭐ FIND DISTANCE */
-  else if (find === "distance") {
-    if (H != null && A != null) {
-      steps += `  tan(θ) = H / D → D = H / tan(θ)\n`;
-      const trig = round2(Math.tan(degToRad(A)));
-
-      resultValue = H / Math.tan(degToRad(A));
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  D = ${round2(H)} / tan(${round2(A)}°)\n`;
-
-      steps += `\nStep 4: Calculate tan(${round2(A)}°)\n`;
-      steps += `  tan(${round2(A)}°) = ${trig}\n`;
-
-      steps += `\nStep 5: Final Calculation\n`;
-      steps += `  D = ${round2(resultValue)} m\n`;
-    }
-
-    else if (S != null && A != null) {
-      steps += `  cos(θ) = D / S → D = S × cos(θ)\n`;
-
-      const trig = round2(Math.cos(degToRad(A)));
-      resultValue = S * trig;
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  D = ${round2(S)} × cos(${round2(A)}°)\n`;
-
-      steps += `\nStep 4: Calculate cos(${round2(A)}°)\n`;
-      steps += `  cos(${round2(A)}°) = ${trig}\n`;
-
-      steps += `\nStep 5: Final Calculation\n`;
-      steps += `  D = ${round2(resultValue)} m\n`;
-    }
-
-    else if (S != null && H != null) {
-      steps += `  S² = H² + D² → D = √(S² − H²)\n`;
-
-      resultValue = Math.sqrt(S*S - H*H);
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  D = √(${round2(S)}² − ${round2(H)}²)\n`;
-
-      steps += `\nStep 4: Final Calculation\n`;
-      steps += `  D = ${round2(resultValue)} m\n`;
-    }
-  }
-
-  /* ⭐ FIND SLANT */
-  else if (find === "slant") {
-    if (H != null && D != null) {
-      steps += `  S = √(H² + D²)\n`;
-
-      resultValue = Math.sqrt(H*H + D*D);
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  S = √(${round2(H)}² + ${round2(D)}²)\n`;
-
-      steps += `\nStep 4: Final Calculation\n`;
-      steps += `  S = ${round2(resultValue)} m\n`;
-    }
-
-    else if (H != null && A != null) {
-      steps += `  sin(θ) = H / S → S = H / sin(θ)\n`;
-
-      const trig = round2(Math.sin(degToRad(A)));
-      resultValue = H / Math.sin(degToRad(A));
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  S = ${round2(H)} / sin(${round2(A)}°)\n`;
-
-      steps += `\nStep 4: Calculate sin(${round2(A)}°)\n`;
-      steps += `  sin(${round2(A)}°) = ${trig}\n`;
-
-      steps += `\nStep 5: Final Calculation\n`;
-      steps += `  S = ${round2(resultValue)} m\n`;
-    }
-
-    else if (D != null && A != null) {
-      steps += `  cos(θ) = D / S → S = D / cos(θ)\n`;
-
-      const trig = round2(Math.cos(degToRad(A)));
-      resultValue = D / Math.cos(degToRad(A));
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  S = ${round2(D)} / cos(${round2(A)}°)\n`;
-
-      steps += `\nStep 4: Calculate cos(${round2(A)}°)\n`;
-      steps += `  cos(${round2(A)}°) = ${trig}\n`;
-
-      steps += `\nStep 5: Final Calculation\n`;
-      steps += `  S = ${round2(resultValue)} m\n`;
-    }
-  }
-
-  /* ⭐ FIND ANGLE */
-  else if (find === "angle") {
-    if (H != null && D != null) {
-      steps += `  tan(θ) = H / D → θ = arctan(H / D)\n`;
-
-      resultValue = Math.atan(H / D);
-      resultValue = radToDeg(resultValue);
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  θ = arctan(${round2(H)} / ${round2(D)})\n`;
-
-      steps += `\nStep 4: Final Calculation\n`;
-      steps += `  θ = ${round2(resultValue)}°\n`;
-    }
-
-    else if (H != null && S != null) {
-      steps += `  sin(θ) = H / S → θ = arcsin(H / S)\n`;
-
-      resultValue = radToDeg(Math.asin(H / S));
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  θ = arcsin(${round2(H)} / ${round2(S)})\n`;
-
-      steps += `\nStep 4: Final Calculation\n`;
-      steps += `  θ = ${round2(resultValue)}°\n`;
-    }
-
-    else if (D != null && S != null) {
-      steps += `  cos(θ) = D / S → θ = arccos(D / S)\n`;
-
-      resultValue = radToDeg(Math.acos(D / S));
-
-      steps += `\nStep 3: Substitute Values\n`;
-      steps += `  θ = arccos(${round2(D)} / ${round2(S)})\n`;
-
-      steps += `\nStep 4: Final Calculation\n`;
-      steps += `  θ = ${round2(resultValue)}°\n`;
-    }
-  }
-
-  if (resultValue == null) {
-    alert("Invalid or insufficient input values.");
+  if (k1 === k2) {
+    alert("Please choose two different known values.");
     return;
   }
 
-  /* ⭐ SHOW FINAL ANSWER FIRST */
-  resultCard.style.display = "block";
-  result.textContent =
-    `${find.toUpperCase()} = ${round2(resultValue)} ${find === "angle" ? "°" : "m"}`;
+  // Get values
+  let H = null, D = null, S = null, A = null;
 
-  /* ⭐ LOAD STEPS */
-  stepsDiv.textContent = steps;
+  function getVal(id, unitId) {
+    if (!$(id) || $(id).value === "") return null;
+    let v = parseFloat($(id).value);
+    if (unitId) v = toMeters[$(unitId).value](v);
+    return v;
+  }
 
-  /* ⭐ HIDE STEPS INITIALLY */
+  if ($("#heightVal"))
+    H = getVal("#heightVal", "#heightUnit");
+
+  if ($("#distanceVal"))
+    D = getVal("#distanceVal", "#distanceUnit");
+
+  if ($("#slantVal"))
+    S = getVal("#slantVal", "#slantUnit");
+
+  if ($("#angleVal"))
+    A = parseFloat($("#angleVal")?.value || null);
+
+  // Angle validity
+  if (A !== null && (A <= 0 || A >= 90)) {
+    alert("Angle must be between 0° and 90°.");
+    return;
+  }
+
+  // Calculate
+  let answer = "";
+  let unit = "m";
+  let steps = "";
+
+  // ===============================================
+  // Required Helper: Compute trig values
+  // ===============================================
+  const rad = (deg) => (deg * Math.PI) / 180;
+
+  // ======================================================
+  // CASE 1 — FIND HEIGHT
+  // ======================================================
+  if (find === "height") {
+
+    // CASE: Known D + Angle
+    if (k1 === "distance" && k2 === "angle" || k2 === "distance" && k1 === "angle") {
+
+      if (D === null || A === null) return alert("Enter valid inputs.");
+
+      const tanA = Math.tan(rad(A));
+      const Hm = D * tanA;
+
+      answer = `HEIGHT = ${r2(Hm)} m`;
+
+      steps =
+`Formula: H = D × tan(θ)
+Substitute: H = ${r2(D)} × tan(${A}°)
+Angle value: tan(${A}°) = ${r4(tanA)}
+Final Calculation: H = ${r2(D)} × ${r4(tanA)} = ${r2(Hm)} m`;
+
+    }
+
+    // CASE: Known S + Angle  → H = S × sin(θ)
+    else if ((k1 === "slant" && k2 === "angle") || (k2 === "slant" && k1 === "angle")) {
+
+      if (S === null || A === null) return alert("Enter valid inputs.");
+
+      const sinA = Math.sin(rad(A));
+      const Hm = S * sinA;
+
+      answer = `HEIGHT = ${r2(Hm)} m`;
+
+      steps =
+`Formula: H = S × sin(θ)
+Substitute: H = ${r2(S)} × sin(${A}°)
+Angle value: sin(${A}°) = ${r4(sinA)}
+Final Calculation: H = ${r2(S)} × ${r4(sinA)} = ${r2(Hm)} m`;
+
+    }
+
+    // CASE: Known S + D → H = √(S² – D²)
+    else if ((k1 === "slant" && k2 === "distance") || (k2 === "slant" && k1 === "distance")) {
+
+      if (S === null || D === null) return alert("Enter valid inputs.");
+
+      const Hm = Math.sqrt(S*S - D*D);
+
+      answer = `HEIGHT = ${r2(Hm)} m`;
+
+      steps =
+`Formula: H = √(S² − D²)
+Substitute: H = √(${r2(S)}² − ${r2(D)}²)
+Final Calculation: H = √(${r2(S*S)} − ${r2(D*D)}) = ${r2(Hm)} m`;
+
+    }
+  }
+
+  // ======================================================
+  // CASE 2 — FIND DISTANCE
+  // ======================================================
+  if (find === "distance") {
+
+    // CASE: H + Angle → D = H / tan(θ)
+    if ((k1 === "height" && k2 === "angle") || (k2 === "height" && k1 === "angle")) {
+
+      if (H === null || A === null) return alert("Enter valid inputs.");
+
+      const tanA = Math.tan(rad(A));
+      const Dm = H / tanA;
+
+      answer = `DISTANCE = ${r2(Dm)} m`;
+
+      steps =
+`Formula: D = H ÷ tan(θ)
+Substitute: D = ${r2(H)} ÷ tan(${A}°)
+Angle value: tan(${A}°) = ${r4(tanA)}
+Final Calculation: D = ${r2(H)} ÷ ${r4(tanA)} = ${r2(Dm)} m`;
+
+    }
+
+    // CASE: S + Angle → D = S × cos(θ)
+    else if ((k1 === "slant" && k2 === "angle") || (k2 === "slant" && k1 === "angle")) {
+
+      if (S === null || A === null) return alert("Enter valid inputs.");
+
+      const cosA = Math.cos(rad(A));
+      const Dm = S * cosA;
+
+      answer = `DISTANCE = ${r2(Dm)} m`;
+
+      steps =
+`Formula: D = S × cos(θ)
+Substitute: D = ${r2(S)} × cos(${A}°)
+Angle value: cos(${A}°) = ${r4(cosA)}
+Final Calculation: D = ${r2(S)} × ${r4(cosA)} = ${r2(Dm)} m`;
+
+    }
+
+    // CASE: S + H → D = √(S² − H²)
+    else if ((k1 === "slant" && k2 === "height") || (k2 === "slant" && k1 === "height")) {
+
+      if (S === null || H === null) return alert("Enter valid inputs.");
+
+      const Dm = Math.sqrt(S*S - H*H);
+
+      answer = `DISTANCE = ${r2(Dm)} m`;
+
+      steps =
+`Formula: D = √(S² − H²)
+Substitute: D = √(${r2(S)}² − ${r2(H)}²)
+Final Calculation: D = √(${r2(S*S)} − ${r2(H*H)}) = ${r2(Dm)} m`;
+
+    }
+  }
+
+  // ======================================================
+  // CASE 3 — FIND SLANT DISTANCE
+  // ======================================================
+  if (find === "slant") {
+
+    // CASE: H + D → S = √(H² + D²)
+    if ((k1 === "height" && k2 === "distance") || (k2 === "height" && k1 === "distance")) {
+
+      if (H === null || D === null) return alert("Enter valid inputs.");
+
+      const Sm = Math.sqrt(H*H + D*D);
+
+      answer = `SLANT DISTANCE = ${r2(Sm)} m`;
+
+      steps =
+`Formula: S = √(H² + D²)
+Substitute: S = √(${r2(H)}² + ${r2(D)}²)
+Final Calculation: S = √(${r2(H*H)} + ${r2(D*D)}) = ${r2(Sm)} m`;
+
+    }
+
+    // CASE: H + Angle → S = H ÷ sin(θ)
+    else if ((k1 === "height" && k2 === "angle") || (k2 === "height" && k1 === "angle")) {
+
+      if (H === null || A === null) return alert("Enter valid inputs.");
+
+      const sinA = Math.sin(rad(A));
+      const Sm = H / sinA;
+
+      answer = `SLANT DISTANCE = ${r2(Sm)} m`;
+
+      steps =
+`Formula: S = H ÷ sin(θ)
+Substitute: S = ${r2(H)} ÷ sin(${A}°)
+Angle value: sin(${A}°) = ${r4(sinA)}
+Final Calculation: S = ${r2(H)} ÷ ${r4(sinA)} = ${r2(Sm)} m`;
+
+    }
+
+    // CASE: D + Angle → S = D ÷ cos(θ)
+    else if ((k1 === "distance" && k2 === "angle") || (k2 === "distance" && k1 === "angle")) {
+
+      if (D === null || A === null) return alert("Enter valid inputs.");
+
+      const cosA = Math.cos(rad(A));
+      const Sm = D / cosA;
+
+      answer = `SLANT DISTANCE = ${r2(Sm)} m`;
+
+      steps =
+`Formula: S = D ÷ cos(θ)
+Substitute: S = ${r2(D)} ÷ cos(${A}°)
+Angle value: cos(${A}°) = ${r4(cosA)}
+Final Calculation: S = ${r2(D)} ÷ ${r4(cosA)} = ${r2(Sm)} m`;
+
+    }
+  }
+
+  // ======================================================
+  // CASE 4 — FIND ANGLE θ
+  // ======================================================
+  if (find === "angle") {
+
+    // CASE: H + D → θ = arctan(H / D)
+    if ((k1 === "height" && k2 === "distance") || (k2 === "height" && k1 === "distance")) {
+
+      if (H === null || D === null) return alert("Enter valid inputs.");
+
+      const ratio = H / D;
+      const Adeg = radToDeg(Math.atan(ratio));
+
+      answer = `ANGLE θ = ${r2(Adeg)}°`;
+
+      steps =
+`Formula: θ = arctan(H ÷ D)
+Substitute: θ = arctan(${r2(H)} ÷ ${r2(D)})
+Angle value: H ÷ D = ${r4(ratio)}
+Final Calculation: θ = arctan(${r4(ratio)}) = ${r2(Adeg)}°`;
+
+    }
+
+    // CASE: H + S → θ = arcsin(H / S)
+    else if ((k1 === "height" && k2 === "slant") || (k2 === "height" && k1 === "slant")) {
+
+      if (H === null || S === null) return alert("Enter valid inputs.");
+
+      const ratio = H / S;
+      const Adeg = radToDeg(Math.asin(ratio));
+
+      answer = `ANGLE θ = ${r2(Adeg)}°`;
+
+      steps =
+`Formula: θ = arcsin(H ÷ S)
+Substitute: θ = arcsin(${r2(H)} ÷ ${r2(S)})
+Angle value: H ÷ S = ${r4(ratio)}
+Final Calculation: θ = arcsin(${r4(ratio)}) = ${r2(Adeg)}°`;
+
+    }
+
+    // CASE: D + S → θ = arccos(D / S)
+    else if ((k1 === "distance" && k2 === "slant") || (k2 === "distance" && k1 === "slant")) {
+
+      if (D === null || S === null) return alert("Enter valid inputs.");
+
+      const ratio = D / S;
+      const Adeg = radToDeg(Math.acos(ratio));
+
+      answer = `ANGLE θ = ${r2(Adeg)}°`;
+
+      steps =
+`Formula: θ = arccos(D ÷ S)
+Substitute: θ = arccos(${r2(D)} ÷ ${r2(S)})
+Angle value: D ÷ S = ${r4(ratio)}
+Final Calculation: θ = arccos(${r4(ratio)}) = ${r2(Adeg)}°`;
+
+    }
+  }
+
+  // Show Results
+  resultDiv.textContent = answer;
+
+  stepsDiv.innerHTML = steps;
   stepsDiv.classList.add("hidden");
-  toggleStepsBtn.textContent = "Show Steps";
+
+  resultCard.style.display = "block";
+
+  // Add Show Steps button
+  if (!$("#showStepsBtn")) {
+    const btn = document.createElement("button");
+    btn.id = "showStepsBtn";
+    btn.textContent = "Show Steps";
+    btn.style.marginTop = "10px";
+    btn.onclick = toggleSteps;
+    resultCard.insertBefore(btn, stepsDiv);
+  }
 });
 
-/* ⭐ SHOW/HIDE STEPS BUTTON */
-toggleStepsBtn.addEventListener("click", () => {
-  stepsDiv.classList.toggle("hidden");
-  toggleStepsBtn.textContent =
-    stepsDiv.classList.contains("hidden") ? "Show Steps" : "Hide Steps";
-});
-
-/* ⭐ CLEAR BUTTON */
 clearBtn.addEventListener("click", () => {
+  inputsArea.querySelectorAll("input").forEach(i => i.value = "");
   resultCard.style.display = "none";
 });
+
+function radToDeg(r) {
+  return (r * 180) / Math.PI;
+}
