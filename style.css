@@ -1,49 +1,82 @@
+/* BASE */
 body {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   background: #f7f7f7;
   color: #222;
-  transition: 0.4s;
+  transition: background 0.3s, color 0.3s;
 }
 
 /* DARK MODE */
 body.dark {
   background: #121212;
-  color: #eee;
+  color: #f2f2f2;
 }
-
 body.dark .card {
-  background: #1e1e1e;
+  background: #1f1f1f;
+}
+body.dark .hero {
+  filter: brightness(0.85);
+}
+body.dark .steps {
+  background: #333;
+  color: #f2f2f2;
 }
 
+/* DARK MODE BUTTON */
 .dark-btn {
   position: fixed;
-  top: 15px;
-  right: 15px;
-  padding: 8px 16px;
+  top: 12px;
+  right: 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
   background: #333;
-  color: white;
-  border-radius: 8px;
+  color: #fff;
   cursor: pointer;
-  z-index: 999;
+  z-index: 10;
 }
 
-/* HEADER */
+/* HERO */
 .hero {
   background: linear-gradient(90deg, #ff8800, #32cd32);
-  padding: 30px 10px;
+  padding: 32px 16px 24px;
   text-align: center;
+  color: #fff;
+}
+.hero h1 {
+  margin: 0 0 8px;
+}
+.subtitle {
+  margin: 4px 0 10px;
+}
+.byline {
+  margin: 0;
+  font-size: 14px;
 }
 
-/* BUTTON */
+/* BUTTONS */
 .cta {
-  margin-top: 15px;
   padding: 10px 24px;
-  background: #0b57ff;
-  border: none;
-  color: white;
-  font-size: 18px;
   border-radius: 10px;
+  border: none;
+  background: #0b57ff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+.small-btn {
+  margin-top: 8px;
+  margin-right: 8px;
+  font-size: 14px;
+  padding: 8px 18px;
+}
+.home-btn {
+  margin: 16px 20px 0;
+}
+.ghost {
+  background: #e0e0e0;
+  color: #222;
 }
 
 /* GALLERY */
@@ -53,7 +86,6 @@ body.dark .card {
   gap: 14px;
   padding: 20px;
 }
-
 .gallery img {
   width: 100%;
   height: 180px;
@@ -61,78 +93,61 @@ body.dark .card {
   border-radius: 12px;
 }
 
-/* MAIN TOOL */
-.hidden {
-  display: none;
-}
-
+/* CARDS */
 .card {
-  background: white;
-  margin: 20px;
-  padding: 22px;
+  background: #fff;
+  margin: 16px 20px;
+  padding: 20px;
   border-radius: 14px;
 }
 
-/* INPUTS SYMMETRICAL */
+/* INPUT ROWS */
 .input-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 18px;
+  gap: 6px;
+  margin-bottom: 16px;
 }
-
 .input-row label {
-  margin-bottom: 6px;
   font-weight: 600;
 }
 
-.input-row select, 
-.input-row input {
-  padding: 10px;
-  border-radius: 8px;
+.input-row select,
+.rowBlock input,
+.rowBlock select {
+  max-width: 260px;
+  padding: 8px 10px;
   border: 1px solid #bbb;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 15px;
 }
 
-/* Value fields generated dynamically */
+/* DYNAMIC INPUTS */
 .rowBlock {
   display: flex;
   flex-direction: column;
-  margin-bottom: 22px;
+  gap: 6px;
+  margin-bottom: 18px;
 }
-
 .rowBlock label {
-  margin-bottom: 6px;
   font-weight: 600;
 }
 
-.rowBlock input {
-  padding: 10px;
-  margin-bottom: 6px;
-  border: 1px solid #bbb;
-  border-radius: 8px;
-}
-
-.rowBlock select {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #bbb;
-}
-
-/* RESULT */
+/* RESULT + STEPS */
 #result {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 10px;
 }
-
-/* STEPS */
 .steps {
-  background: #f0f0f0;
-  padding: 12px;
+  background: #f3e8d7;
+  padding: 10px;
   border-radius: 8px;
-  margin-top: 12px;
+  white-space: pre-line;
+  margin-top: 10px;
 }
 
-body.dark .steps {
-  background: #333;
+/* UTILITIES */
+.hidden {
+  display: none;
 }
