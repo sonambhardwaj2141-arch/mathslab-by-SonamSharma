@@ -9,41 +9,35 @@
 
 <body>
 
-  <!-- ⭐ HOME PAGE -->
-  <div id="home">
+  <!-- HOME HEADER -->
+  <header class="hero">
+    <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
 
-    <header class="hero">
-      <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
+    <p class="subtitle">
+      Height • Horizontal Distance • Slant Distance • Angle θ — find any one value using the other two
+    </p>
 
-      <p class="subtitle">
-        Height • Horizontal Distance • Slant Distance • Angle θ — find any one value using the other two
-      </p>
+    <p class="byline">
+      Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose, Ludhiana
+    </p>
 
-      <p class="byline">
-        Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose, Ludhiana
-      </p>
+    <button id="startBtn" class="cta">Start TrignoTool</button>
+  </header>
 
-      <button id="startBtn" class="cta">Start TrignoTool</button>
-    </header>
+  <!-- IMAGE GALLERY -->
+  <section class="gallery">
+    <img src="./images/gallery_1.jpeg" loading="lazy" />
+    <img src="./images/gallery_2.jpeg" loading="lazy" />
+    <img src="./images/gallery_3.jpeg" loading="lazy" />
+    <img src="./images/gallery_4.jpeg" loading="lazy" />
+    <img src="./images/gallery_5.jpeg" loading="lazy" />
+    <img src="./images/gallery_6.jpeg" loading="lazy" />
+    <img src="./images/gallery_7.jpeg" loading="lazy" />
+    <img src="./images/gallery_8.jpeg" loading="lazy" />
+  </section>
 
-    <!-- ⭐ GALLERY -->
-    <section class="gallery">
-      <img src="./images/gallery_1.jpeg" loading="lazy" />
-      <img src="./images/gallery_2.jpeg" loading="lazy" />
-      <img src="./images/gallery_3.jpeg" loading="lazy" />
-      <img src="./images/gallery_4.jpeg" loading="lazy" />
-      <img src="./images/gallery_5.jpeg" loading="lazy" />
-      <img src="./images/gallery_6.jpeg" loading="lazy" />
-      <img src="./images/gallery_7.jpeg" loading="lazy" />
-      <img src="./images/gallery_8.jpeg" loading="lazy" />
-    </section>
-
-  </div>
-
-  <!-- ⭐ TOOL PAGE -->
+  <!-- TRIGNO TOOL PAGE -->
   <main id="tool" class="hidden">
-
-    <button id="homeBtn" class="cta" style="margin-bottom: 15px;">Home</button>
 
     <!-- STEP 1 -->
     <section class="card">
@@ -52,7 +46,7 @@
         <option value="height">Height (H)</option>
         <option value="distance">Horizontal Distance (D)</option>
         <option value="slant">Slant Distance (S)</option>
-        <option value="angle">Angle (θ)</option>
+        <option value="angle">Angle θ</option>
       </select>
     </section>
 
@@ -66,7 +60,7 @@
           <option value="height">Height (H)</option>
           <option value="distance">Horizontal Distance (D)</option>
           <option value="slant">Slant Distance (S)</option>
-          <option value="angle">Angle (θ)</option>
+          <option value="angle">Angle θ</option>
         </select>
       </div>
 
@@ -76,7 +70,7 @@
           <option value="height">Height (H)</option>
           <option value="distance">Horizontal Distance (D)</option>
           <option value="slant">Slant Distance (S)</option>
-          <option value="angle">Angle (θ)</option>
+          <option value="angle">Angle θ</option>
         </select>
       </div>
     </section>
@@ -90,19 +84,15 @@
       <button id="clear" class="ghost">Clear</button>
     </section>
 
-    <!-- ⭐ RESULT -->
+    <!-- RESULT -->
     <section class="card" id="result-card" style="display:none;">
       <h2>Result</h2>
       <div id="result"></div>
-
-      <button id="toggleSteps" class="ghost">Show Steps</button>
-
       <pre id="steps" class="steps hidden"></pre>
     </section>
 
   </main>
 
   <script src="app.js"></script>
-
 </body>
 </html>
