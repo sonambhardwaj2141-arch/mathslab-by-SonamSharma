@@ -1,7 +1,10 @@
 // SHORTHAND SELECTOR
-function $(id) {
-  return document.querySelector(id);
-}
+function $(id) { return document.querySelector(id); }
+
+// DARK MODE TOGGLE
+$("#darkModeToggle").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
 
 // PAGE TOGGLE
 const startBtn = $("#startBtn");
@@ -15,18 +18,16 @@ startBtn.addEventListener("click", () => {
     gallery.style.display = "none";
     hero.style.display = "none";
     startBtn.textContent = "Home";
-    window.scrollTo(0, 0);
   } else {
     tool.classList.add("hidden");
     gallery.style.display = "grid";
     hero.style.display = "block";
     startBtn.textContent = "Start TrignoTool";
-    window.scrollTo(0, 0);
   }
 });
 
 // -------------------------
-// FIELD GENERATION
+// FIELD TEMPLATES
 // -------------------------
 const fields = {
   height: `
@@ -73,16 +74,16 @@ const fields = {
 
 // UPDATE INPUT AREA
 function updateInputFields() {
-  const k1 = $("#known1").value;
-  const k2 = $("#known2").value;
+  const a = $("#known1").value;
+  const b = $("#known2").value;
 
-  if (k1 === k2) {
+  if (a === b) {
     $("#inputsArea").innerHTML =
       `<p style="color:red;">❌ Please select two different known values.</p>`;
     return;
   }
 
-  $("#inputsArea").innerHTML = fields[k1] + fields[k2];
+  $("#inputsArea").innerHTML = fields[a] + fields[b];
 }
 
 $("#known1").addEventListener("change", updateInputFields);
@@ -90,57 +91,60 @@ $("#known2").addEventListener("change", updateInputFields);
 updateInputFields();
 
 // -------------------------
-// CALCULATION LOGIC
+// CALCULATION
 // -------------------------
-function calcHeight(D, S, Adeg) {
-  if (D != null && Adeg != null) {
-    const H = D * Math.tan(Adeg * Math.PI / 180);
+function calcHeight(D, S, A) {
+  if (D != null && A != null) {
+    const r = D * Math.tan(A * Math.PI / 180);
     return {
-      ans: H,
-      steps: `Formula: H = D × tan(θ)
-H = ${D} × tan(${Adeg})
-H = ${H.toFixed(2)}`
+      ans: r,
+      steps: `H = D × tan(θ)
+H = ${D} × tan(${A})
+H = ${r.toFixed(2)}`
     };
   }
   if (S != null && D != null) {
-    const H = Math.sqrt(S*S - D*D);
+    const r = Math.sqrt(S * S - D * D);
     return {
-      ans: H,
-      steps: `Formula: H = √(S² − D²)
-H = √(${S}² − ${D}²)
-H = ${H.toFixed(2)}`
+      ans: r,
+      steps: `H = √(S² - D²)
+H = √(${S}² - ${D}²)
+H = ${r.toFixed(2)}`
     };
   }
-  return null;
 }
 
-// CALCULATE BUTTON
+function updateDiagram(H, D, S) {
+  $("#line-base").setAttribute("x2", 20 + (D * 3));
+  $("#line-slant").setAttribute("x2", 20 + (D * 3));
+  $("#line-slant").setAttribute("y2", 180 - (H * 3));
+  $("#line-height").setAttribute("y2", 180 - (H * 3));
+}
+
 $("#calc").addEventListener("click", () => {
   const find = $("#findValue").value;
-  const k1 = $("#known1").value;
-  const k2 = $("#known2").value;
 
-  let H=null, D=null, S=null, A=null;
+  let H = $("#heightVal") ? Number($("#heightVal").value) : null;
+  let D = $("#distanceVal") ? Number($("#distanceVal").value) : null;
+  let S = $("#slantVal") ? Number($("#slantVal").value) : null;
+  let A = $("#angleVal") ? Number($("#angleVal").value) : null;
 
-  if ($("#heightVal")) H = Number($("#heightVal")?.value);
-  if ($("#distanceVal")) D = Number($("#distanceVal")?.value);
-  if ($("#slantVal")) S = Number($("#slantVal")?.value);
-  if ($("#angleVal")) A = Number($("#angleVal")?.value);
+  let r;
 
-  let resultData;
+  if (find === "height") r = calcHeight(D, S, A);
 
-  if (find === "height") resultData = calcHeight(D, S, A);
-
-  if (!resultData) {
+  if (!r) {
     alert("Invalid or missing input!");
     return;
   }
 
   $("#result").innerHTML =
-    `${find.toUpperCase()} = ${resultData.ans.toFixed(2)} m`;
+    `${find.toUpperCase()} = ${r.ans.toFixed(2)} m`;
 
-  $("#steps").textContent = resultData.steps;
+  $("#steps").textContent = r.steps;
   $("#result-card").style.display = "block";
+
+  updateDiagram(r.ans, D, S);
 });
 
 // SHOW/HIDE STEPS
