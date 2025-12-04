@@ -8,18 +8,22 @@
 </head>
 
 <body>
+
   <!-- DARK MODE BUTTON -->
   <button id="darkModeToggle" class="dark-btn">🌙 Dark Mode</button>
 
   <!-- HEADER / HOME PAGE -->
   <header class="hero">
     <h1>MathsLab by Sonam — <span class="sub">Smart TrignoTool</span></h1>
+
     <p class="subtitle">
       Height • Horizontal Distance • Slant Distance • Angle θ — find any one value using the other two
     </p>
+
     <p class="byline">
       Developed by <b>Sonam Sharma</b>, Maths Mistress — GSSS Multipurpose, Ludhiana
     </p>
+
     <button id="startBtn" class="cta">Start TrignoTool</button>
   </header>
 
@@ -38,9 +42,10 @@
   <!-- TOOL PAGE -->
   <main id="tool" class="hidden">
 
+    <!-- HOME BUTTON -->
     <button id="homeBtn" class="cta home-btn">Home</button>
 
-    <!-- STEP 1 -->
+    <!-- STEP 1: What to Find -->
     <section class="card">
       <h2>Which value do you want to find?</h2>
       <div class="input-row">
@@ -53,7 +58,7 @@
       </div>
     </section>
 
-    <!-- STEP 2 -->
+    <!-- STEP 2: Known Values -->
     <section class="card">
       <h2>Which two values do you know?</h2>
 
@@ -78,7 +83,7 @@
       </div>
     </section>
 
-    <!-- STEP 3 -->
+    <!-- STEP 3: Input Values -->
     <section class="card">
       <h2>Enter the two known values</h2>
       <div id="inputsArea"></div>
@@ -95,12 +100,15 @@
       <button id="toggleSteps" class="ghost small-btn">Show Steps</button>
       <pre id="steps" class="steps hidden"></pre>
 
+      <!-- TRIANGLE DIAGRAM -->
       <h3>Triangle Diagram</h3>
       <svg id="diagram" width="320" height="220" style="background:white; border-radius:10px">
         <!-- Base D -->
         <line id="baseLine" x1="40" y1="180" x2="280" y2="180" stroke="blue" stroke-width="4"></line>
+
         <!-- Height H -->
         <line id="heightLine" x1="40" y1="180" x2="40" y2="60" stroke="green" stroke-width="4"></line>
+
         <!-- Slant S -->
         <line id="slantLine" x1="40" y1="60" x2="280" y2="180" stroke="red" stroke-width="4"></line>
 
@@ -116,6 +124,7 @@
 
   </main>
 
+  <!-- SCRIPT -->
   <script src="app.js"></script>
 </body>
 </html>
