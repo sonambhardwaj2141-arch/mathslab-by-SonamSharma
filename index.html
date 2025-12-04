@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MathsLab by Sonam — Smart TrignoTool</title>
 
-  <!-- Updated to avoid caching issues -->
-  <link rel="stylesheet" href="style.css?v=1002" />
+  <!-- FORCE NO CACHE (WhatsApp + all browsers) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <!-- VERSION CONTROL (Increase number when updating) -->
+  <link rel="stylesheet" href="style.css?v=2000" />
 </head>
 
 <body>
@@ -47,7 +53,7 @@
     <!-- HOME BUTTON -->
     <button id="homeBtn" class="cta home-btn">Home</button>
 
-    <!-- STEP 1: What to Find -->
+    <!-- STEP 1 -->
     <section class="card">
       <h2>Which value do you want to find?</h2>
       <div class="input-row">
@@ -60,7 +66,7 @@
       </div>
     </section>
 
-    <!-- STEP 2: Known Values -->
+    <!-- STEP 2 -->
     <section class="card">
       <h2>Which two values do you know?</h2>
 
@@ -85,7 +91,7 @@
       </div>
     </section>
 
-    <!-- STEP 3: Input Values -->
+    <!-- STEP 3 -->
     <section class="card">
       <h2>Enter the two known values</h2>
       <div id="inputsArea"></div>
@@ -102,32 +108,24 @@
       <button id="toggleSteps" class="ghost small-btn">Show Steps</button>
       <pre id="steps" class="steps hidden"></pre>
 
-      <!-- TRIANGLE DIAGRAM -->
       <h3>Triangle Diagram</h3>
       <svg id="diagram" width="320" height="220" style="background:white; border-radius:10px">
-        <!-- Base D -->
         <line id="baseLine" x1="40" y1="180" x2="280" y2="180" stroke="blue" stroke-width="4"></line>
-
-        <!-- Height H -->
         <line id="heightLine" x1="40" y1="180" x2="40" y2="60" stroke="green" stroke-width="4"></line>
-
-        <!-- Slant S -->
         <line id="slantLine" x1="40" y1="60" x2="280" y2="180" stroke="red" stroke-width="4"></line>
 
-        <!-- Labels -->
         <text id="labelH" x="10" y="120" font-size="16">H</text>
         <text id="labelD" x="150" y="200" font-size="16">D</text>
         <text id="labelS" x="160" y="110" font-size="16">S</text>
 
-        <!-- Right angle box -->
         <rect id="angleBox" x="40" y="162" width="16" height="16" fill="none" stroke="black" stroke-width="2"></rect>
       </svg>
     </section>
 
   </main>
 
-  <!-- Updated JS with version -->
-  <script src="app.js?v=1002"></script>
+  <!-- JS with version -->
+  <script src="app.js?v=2000"></script>
 
 </body>
 </html>
