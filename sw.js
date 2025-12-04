@@ -1,3 +1,5 @@
+self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("activate", () => self.clients.claim());
 const CACHE = 'mlab-trigno-gallery-v4'
 const FILES = [
   './',
